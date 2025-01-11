@@ -26,56 +26,6 @@
       </tags>
   </entry>
   <entry>
-    <title>算法 | 分治</title>
-    <url>/2024/12/20/%E5%88%86%E6%B2%BB%E6%B3%95/</url>
-    <content><![CDATA[<h1 id="练习"><a href="#练习" class="headerlink" title="练习"></a>练习</h1><h3 id="Q1：求序列第二大元素"><a href="#Q1：求序列第二大元素" class="headerlink" title="Q1：求序列第二大元素"></a>Q1：求序列第二大元素</h3><p><img src="/Pasted%20image%2020230513151811.png"><br><strong>解</strong>：<br>在分治算法中，当$n&#x3D;2$时，只需要一次比较即可找到第二大元素。当$n&gt;2$时，需要分别在两个子数组中找到第一大和第二大的元素，然后再进行$2$次比较，从而得到整个数组的第二大元素。</p>
-<span id="more"></span>
-
-<p>假设找到第一大和第二大的元素需要 $T(n)$ 次比较。在分治算法中，我们将数组分成了两个大小为 $n&#x2F;2$ 的子数组，因此我们需要分别在这两个子数组中找到第一大和第二大的元素。由于递归地进行该算法，所以需要进行两次比较。因此，总共需要进行 $2T(n&#x2F;2) + 2$ 次比较。</p>
-<p>当 $n&#x3D;2^k$ 时，递归的深度为 $k$，此时数组中的元素个数为 $2^k$。因此，比较的次数为：</p>
-<p>$$<br>\begin{aligned}<br>T(n) &amp;&#x3D; 2T(n&#x2F;2) + 2 \<br>&amp;&#x3D; 2(2T(n&#x2F;4) + 2) + 2 \<br>&amp;&#x3D; 2^2 T(n&#x2F;2^2) + 2^2 + 2 \<br>&amp;\quad \vdots \<br>&amp;&#x3D; 2^k T(1) + 2^k - 2 \<br>&amp;&#x3D; n - 2 + \frac{n}{2} \<br>&amp;&#x3D; \frac{3n}{2} - 2<br>\end{aligned}<br>$$</p>
-<p>因此，当 $n&#x3D;2^k$ 时，该算法的比较次数为 $3n&#x2F;2 - 2$，选项 $\mathbf{D}$ 是正确的。</p>
-<h3 id="Q2：主定理运用"><a href="#Q2：主定理运用" class="headerlink" title="Q2：主定理运用"></a>Q2：主定理运用</h3><p><img src="/Pasted%20image%2020230513153733.png"><br><strong>解</strong>：<br>该问题中的分治算法的时间复杂度由分治的步骤和治的步骤两部分组成。在分治的步骤中，问题被分成多个规模较小的子问题；在治的步骤中，对每个子问题进行处理。<br><img src="/Pasted%20image%2020230513153853.png" alt="500"><br>在选项 A 中，问题每步被分成 4 个规模均为 n&#x2F;2 的子问题，这是一种类似于四分的方式。在治的步骤中，处理每个子问题的时间复杂度是 Θ(n)。因此，总时间复杂度可以用递归式表示为：**T(n) &#x3D; 4T(n&#x2F;2) + Θ(n)**。 根据主定理，这个递归式的解是 Θ(n^2)。因此，选项 A 的时间复杂度是 Θ(n^2)。</p>
-<p>在选项 B 中，问题每步被分成 2 个规模均为 n&#x2F;2 的子问题，这是一种类似于二分的方式。在治的步骤中，处理每个子问题的时间复杂度是 Θ(n^2)。因此，总时间复杂度可以用递归式表示为：**T(n) &#x3D; 2T(n&#x2F;2) + Θ(n^2)**。 根据主定理，这个递归式的解是 Θ(n^2 log n)。因此，选项 B 的时间复杂度是 Θ(n^2 log n)。</p>
-<p>在选项 C 中，问题每步被分成 7 个规模均为 n&#x2F;3 的子问题。在治的步骤中，处理每个子问题的时间复杂度是 Θ(n)。因此，总时间复杂度可以用递归式表示为：**T(n) &#x3D; 7T(n&#x2F;3) + Θ(n)**。 根据主定理，这个递归式的解是 Θ(n^log3 7)。因此，选项 C 的时间复杂度是 Θ(n^1.77)。</p>
-<p>在选项 D 中，问题每步被分成 5 个规模均为 n&#x2F;3 的子问题。在治的步骤中，处理每个子问题的时间复杂度是 Θ(n^2)。因此，总时间复杂度可以用递归式表示为：**T(n) &#x3D; 5T(n&#x2F;3) + Θ(n^2)*<em>。根据主定理，这个递归式的解是 Θ(n^2</em> log3 5) ≈ Θ(1.464 * n^2)。因此，选项 D 的时间复杂度最快，是 Θ(n^1.464)。</p>
-<p>因此，选项 D 是最快的。</p>
-<h3 id="Q3"><a href="#Q3" class="headerlink" title="Q3"></a>Q3</h3><p><img src="/Pasted%20image%2020230513214506.png"><br><strong>解</strong>：<br>当输入数组 A[1…n]由相等的 n 个元素组成时，快速排序算法 QUICKSORT 的运算特征如下：</p>
-<p>A. 运行时间为 Θ(n log n)。在最坏情况下，每次划分只能减少一个元素，递推式为 T(n) &#x3D; T(n-1) + Θ(n)，解得 T(n) &#x3D; Θ(n^2)；但是，在平均情况下，每次划分可以将序列分为两部分，递推式为 T(n) &#x3D; 2T(n&#x2F;2) + Θ(n)，解得 T(n) &#x3D; Θ(n log n)。</p>
-<p>B. 元素交换次数为 Θ(n)，因为在每次划分结束后，枢轴元素会被放置到其最终位置上，而其他元素都会被分到枢轴元素的左边或右边，因此只需要进行一次交换。</p>
-<p>C. 元素比较次数为 Θ(n log n)，因为在每次划分中，每个元素最多只会与一个枢轴元素进行比较，而划分的次数为 O(log n)，因此总的比较次数为 Θ(n log n)。</p>
-<p>D. 当输入数组 A[1…n]由相等的 n 个元素组成时，每次执行划分过程 SPLIT 后划分出的子序列中有可能存在一个为空。例如，假设枢轴元素取第一个元素，输入数组为 A&#x3D;{1, 1, 1, …, 1}，则在第一次划分后，所有元素都被划分到了右侧子序列中，左侧子序列为空。</p>
-<p>因此，选项 A、B、C 均为正确的，选项 D 不正确。</p>
-<h3 id="Q4："><a href="#Q4：" class="headerlink" title="Q4："></a>Q4：</h3><p><img src="/Pasted%20image%2020230513215034.png"><br><strong>解</strong>：<br>当输入数组 A[1…n]由相等的 n 个元素组成时，快速排序算法 QUICKSORT 的运行特征是每次划分都会将枢轴元素放置在其最终位置上，并将小于（或等于）枢轴元素的元素分到枢轴元素的左边，大于枢轴元素的元素分到枢轴元素的右边。因此，在一个序列中，如果所有元素都相等，则每次划分后，枢轴元素左侧和右侧的子序列都不包含任何元素。由于左侧子序列为空，故枢轴元素必然为该子序列的第一个元素，即为 A[1]。而对于右侧子序列，由于其中也不存在任何元素，因此可以认为其不存在，因此 A[2], A[3], …, A[n]的顺序可以随意排列。</p>
-<p>因此，选项 A 为正确答案，选项 B、C、D 均不正确。</p>
-<h1 id="知识点"><a href="#知识点" class="headerlink" title="知识点"></a>知识点</h1><h2 id="QuickSort"><a href="#QuickSort" class="headerlink" title="QuickSort"></a>QuickSort</h2><blockquote>
-<p>具体步骤解析见 P112-p115</p>
-</blockquote>
-<h3 id="Split-算法"><a href="#Split-算法" class="headerlink" title="Split 算法"></a>Split 算法</h3><figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="comment">//返回最终a[low]在序列中的下标</span></span><br><span class="line"><span class="comment">//左闭右闭</span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">split</span><span class="params">(<span class="type">int</span> a[], <span class="type">int</span> low, <span class="type">int</span> high )</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="type">int</span> i = low; <span class="comment">// 主元素</span></span><br><span class="line">	<span class="type">int</span> x = a[low];</span><br><span class="line">	<span class="keyword">for</span>( <span class="type">int</span> j = low + <span class="number">1</span>; j &lt;= high; j++)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">if</span>(a[j] &lt;= x)&#123; <span class="comment">//发现小于x的元素</span></span><br><span class="line">			i++;</span><br><span class="line">			<span class="keyword">if</span>(i!=j) <span class="built_in">swap</span>(a[j], a[i]);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="built_in">swap</span>(a[low],a[i]);</span><br><span class="line">	<span class="keyword">return</span> i;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>复杂度分析：</p>
-<ul>
-<li>时间复杂度：$O(n)$；</li>
-<li>空间复杂度：$O(1)$；</li>
-</ul>
-<h3 id="主算法"><a href="#主算法" class="headerlink" title="主算法"></a>主算法</h3><figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="comment">//左闭右闭</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">QuickSort</span><span class="params">(<span class="type">int</span> a[],<span class="type">int</span> low, <span class="type">int</span> high)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">if</span>(low&lt;high)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="type">int</span> pivot = <span class="built_in">split</span>(a,low,high); <span class="comment">//排序后当前主元素所在的下标</span></span><br><span class="line">		<span class="comment">//递归调用左右两部分，直至当前区间只有一个元素</span></span><br><span class="line">		<span class="built_in">QuickSort</span>(a, low, pivot<span class="number">-1</span>);</span><br><span class="line">		<span class="built_in">QuickSort</span>(a, pivot<span class="number">+1</span>, high);</span><br><span class="line">	&#125;</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">	快速排序</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="comment">//以low为主元素，将序列元素划分为两部分 [ &lt;=a[low], a[low], &gt;a[low] ]</span></span><br><span class="line"><span class="comment">//返回最终a[low]在序列中的下标</span></span><br><span class="line"><span class="comment">//左闭右闭</span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">split</span><span class="params">(<span class="type">int</span> a[], <span class="type">int</span> low, <span class="type">int</span> high )</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="type">int</span> i = low; <span class="comment">// 主元素</span></span><br><span class="line">	<span class="type">int</span> x = a[low];</span><br><span class="line">	<span class="keyword">for</span>( <span class="type">int</span> j = low + <span class="number">1</span>; j &lt;= high; j++)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">if</span>(a[j] &lt;= x)&#123; <span class="comment">//发现小于x的元素</span></span><br><span class="line">			i++;</span><br><span class="line">			<span class="keyword">if</span>(i!=j) <span class="built_in">swap</span>(a[j], a[i]);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="built_in">swap</span>(a[low],a[i]);</span><br><span class="line">	<span class="keyword">return</span> i;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//左闭右闭</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">QuickSort</span><span class="params">(<span class="type">int</span> a[],<span class="type">int</span> low, <span class="type">int</span> high)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">if</span>(low&lt;high)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="type">int</span> pivot = <span class="built_in">split</span>(a,low,high); <span class="comment">//排序后当前主元素所在的下标</span></span><br><span class="line">		<span class="built_in">QuickSort</span>(a, low, pivot<span class="number">-1</span>);</span><br><span class="line">		<span class="built_in">QuickSort</span>(a, pivot<span class="number">+1</span>, high);</span><br><span class="line">	&#125;</span><br><span class="line"> &#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="type">int</span> a[<span class="number">9</span>] = &#123;<span class="number">0</span>,<span class="number">5</span>,<span class="number">7</span>,<span class="number">1</span>,<span class="number">6</span>,<span class="number">4</span>,<span class="number">8</span>,<span class="number">3</span>,<span class="number">2</span>&#125;;</span><br><span class="line">	<span class="built_in">QuickSort</span>(a,<span class="number">1</span>,<span class="number">8</span>);</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">1</span>; i&lt;=<span class="number">8</span>;i++) cout&lt;&lt;a[i]&lt;&lt;<span class="string">&quot; &quot;</span>;</span><br><span class="line">	cout&lt;&lt;endl;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="复杂度分析"><a href="#复杂度分析" class="headerlink" title="复杂度分析"></a>复杂度分析</h3><ul>
-<li><strong>时间复杂度</strong>：$O(nlogn)$<br>最坏情况下：每一轮 split 得到的位置都为 low，即 pivot &#x3D; low，那么每一轮的两次分治都有其一支是没有用的，因此主函数的复杂度为 $O(n)$，综合起来最坏情况下的时间复杂度为$O(n^2)$；<br>最优情况下，每一轮 split 得到的位置为中项的位置，时间复杂度为$O(nlogn)$；</li>
-<li><strong>空间复杂度</strong>：$O(n)$</li>
-</ul>
-]]></content>
-      <categories>
-        <category>Algorithm</category>
-      </categories>
-      <tags>
-        <tag>Algorithm</tag>
-        <tag>分治</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>测试</title>
     <url>/2024/12/20/test/</url>
     <content><![CDATA[<blockquote>
@@ -87,212 +37,6 @@
 ]]></content>
       <tags>
         <tag>test</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>技术阅读 | 软件架构课</title>
-    <url>/2024/12/22/%E3%80%8A%E8%BD%AF%E4%BB%B6%E6%9E%B6%E6%9E%84%E8%AF%BE%E3%80%8B/</url>
-    <content><![CDATA[<h1 id="一、演进中的架构"><a href="#一、演进中的架构" class="headerlink" title="一、演进中的架构"></a>一、演进中的架构</h1><h2 id="01-原始分布式时代：Unix设计哲学下的服务探索"><a href="#01-原始分布式时代：Unix设计哲学下的服务探索" class="headerlink" title="01 | 原始分布式时代：Unix设计哲学下的服务探索"></a>01 | 原始分布式时代：Unix设计哲学下的服务探索</h2><p><img src="https://raw.githubusercontent.com/Tomorrowllbefine/Study/master/pics/image-6.png"></p>
-<p>就我个人而言，我对”微服务中的简单”的理解，是指微服务中的每个服务，每一个中间件，服务中的每个接口，都是”简单”的，同时也应该以”简单“作为目标进行设计。</p>
-<p>正如很多前辈所言，微服务的出现，目的为了弥补单应用中存在的各个缺陷，如业务功能过多导致代码的耦合度很大，某个功能使用频繁高，占用资源多（本身这个功能可能跟业务无关，但是因为占用大量资源导致整个系统不可用）等等。</p>
-<span id="more"></span>
-
-<p>这个时候，我们可能会基于业务功能，对应用进行拆分，把每个业务拆分出来，做成一个微服务应用。功能模块的拆分有几个好处，一是在开发团队人员充足的情况下，每个人需要维护的代码变简单了，二是整个系统解耦了，每个服务也可以互相调用，换句话说就是系统的复用性变高了，三是，在单个微服务变得不可用的情况下，如果配置的好，是不会影响整个系统正常运行，从一定程度上提高了系统的可靠性和可用性。</p>
-<p>基于这个思路，我想中台和serveless的诞生，也是基于这些准则，比如在后期发现，随着业务不停扩展，代码中有好多功能是通用的，那么是不是可以把这些这些代码抽出来，做成一个个模块，给各个应用级的微服务应用进行调用呢？（基础平台的职责）</p>
-<p>当然，也正如老师所说的，就从整个架构来说，其实微服务并不是这么简单的，既然拆分了应用，那么不可避免的，你就会遇到这些问题：</p>
-<ol>
-<li><p>各个微服务之间怎么知道接口的地址在哪（服务发现和服务注册中间件）</p>
-</li>
-<li><p>服务之间该用什么协议进行通讯和接口的调用（rpc调用中间件）</p>
-</li>
-<li><p>某个服务突然不可用了，我又不能影响整个系统的可用性，我该怎么办（服务降级，熔断）</p>
-</li>
-<li><p>为了提高某个服务可用性，我做了集群（同样的服务，在不同的节点开了应用），我该怎么分配落在这个集群中的请求（负载均衡中间件）</p>
-</li>
-<li><p>外部怎么能够访问这个系统中的某个微服务（网关中间件）等等（如分布式系统中的锁设计和事务实现）</p>
-</li>
-</ol>
-<p>总而来说，“微服务的简单”，这个命题还挺有意思的，它就像一个有多个pics的乐高模型一样，对于每个pic的积木而言，确实很简单，但是就整体而言，它是由多块积木拼起来的，往往就比较，复杂，也需要我们去花心思去思考，去完成。</p>
-<p>我觉得”简单”二字，不仅仅一门艺术，同时也很考验我们程序员的技术和设计能力。我想这也是大部分程序员的目标和初衷吧。</p>
-<h2 id="03-SOA时代：成功理论与失败实践"><a href="#03-SOA时代：成功理论与失败实践" class="headerlink" title="03 | SOA时代：成功理论与失败实践"></a>03 | SOA时代：成功理论与失败实践</h2><p><img src="https://raw.githubusercontent.com/Tomorrowllbefine/Study/master/pics/image-9.png"></p>
-<p><strong>网友</strong>：</p>
-<p><img src="https://raw.githubusercontent.com/Tomorrowllbefine/Study/master/pics/image-10.png"></p>
-<p><img src="https://raw.githubusercontent.com/Tomorrowllbefine/Study/master/pics/image-8.png"></p>
-<h2 id="04-微服务时代：SOA的革命者"><a href="#04-微服务时代：SOA的革命者" class="headerlink" title="04 | 微服务时代：SOA的革命者"></a>04 | 微服务时代：SOA的革命者</h2><p>服务的注册发现、跟踪治理、负载均衡、故障隔离、认证授权、伸缩扩展、传输通讯、事务处理等问题，在微服务中，都不再会有统一的解决方案。</p>
-<h2 id="05-后微服务时代：跨越软件与硬件之间的界限"><a href="#05-后微服务时代：跨越软件与硬件之间的界限" class="headerlink" title="05 | 后微服务时代：跨越软件与硬件之间的界限"></a>05 | 后微服务时代：跨越软件与硬件之间的界限</h2><hr>
-<p>在微服务架构中，会面临一些必须要解决的问题，如注册发现、跟踪治理、复杂均衡、传输通讯等。</p>
-<p>但这些问题，实际上在SOA时代甚至可以说自原始分布式时代，就一直存在了。既然只要是分布式系统，就没办法完全避免这些问题，那反过来思考：<strong>这些问题需要分布式系统自己来解决吗？</strong></p>
-<p><strong>Q：分布式架构发展到服务网格后，真的是到达“最好的时代”了吗？软件架构的发展不太可能真的就此止步，你认为今天的云原生还有哪些主要矛盾，下一次软件架构的进化将会主要解决什么问题？</strong></p>
-<p><img src="https://raw.githubusercontent.com/Tomorrowllbefine/Study/master/pics/image.png"></p>
-<h2 id="06-无服务时代：“不分布式”云端系统的起点"><a href="#06-无服务时代：“不分布式”云端系统的起点" class="headerlink" title="06 | 无服务时代：“不分布式”云端系统的起点"></a>06 | 无服务时代：“不分布式”云端系统的起点</h2><hr>
-<p><strong>Q：你是否了解、接触过无服务架构？无服务目前在中国处于起步的发展阶段，阿里云、腾讯云的无服务计算框架，都给了普通用户相当大的免费额度，你愿意去试一下吗？</strong></p>
-<p><img src="https://raw.githubusercontent.com/Tomorrowllbefine/Study/master/pics/image-4.png"></p>
-<p><img src="https://raw.githubusercontent.com/Tomorrowllbefine/Study/master/pics/image-2.png"></p>
-<h1 id="二、架构师的视角"><a href="#二、架构师的视角" class="headerlink" title="二、架构师的视角"></a>二、架构师的视角</h1><h2 id="07-远程服务调用（上）：从本地方法到远程方法的桥梁"><a href="#07-远程服务调用（上）：从本地方法到远程方法的桥梁" class="headerlink" title="07 | 远程服务调用（上）：从本地方法到远程方法的桥梁"></a>07 | 远程服务调用（上）：从本地方法到远程方法的桥梁</h2><hr>
-<p><strong>RPC</strong> 出现的最初目的，就是为了<strong>让计算机能够跟调用本地方法一样，去调用远程方法</strong>。</p>
-<h3 id="1）进程间通讯"><a href="#1）进程间通讯" class="headerlink" title="1）进程间通讯"></a>1）进程间通讯</h3><p>先了解一下在本地方法调用时，发生了什么：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 调用者（Caller）      ： main()</span></span><br><span class="line"><span class="comment">// 被调用者（Callee）      ： println()</span></span><br><span class="line"><span class="comment">// 调用点（Call Site）   ： 发生方法调用的指令流位置</span></span><br><span class="line"><span class="comment">// 调用参数（Parameter） ： 由Caller传递给Callee的数据，即“hello world”</span></span><br><span class="line"><span class="comment">// 返回值（Retval）      ： 由Callee传递给Caller的数据，如果方法正常完成，返回值是void，否则是对应的异常</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">  System.out.println(“hello world”);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>在不考虑编译器优化的前提下，程序运行至调用 <code>println()</code> 这一行时，计算机（物理机或虚拟机）会做以下事情：</p>
-<ul>
-<li><p><strong>传递方法参数</strong>：将字符串”hello world”的引用压栈；</p>
-</li>
-<li><p><strong>确定方法版本</strong>：根据<code>println()</code>方法的签名，确定它的执行版本其实并不是一个简单的过程，不管是编译时的静态解析也好，还是运行时的动态分配也好，程序都必须通过某些语言规范中明确定义的原则，找到明确的被调用者Callee。</p>
-</li>
-</ul>
-<blockquote>
-<p>此处的明确指唯一一个Callee，或者有严格优先级的多个Callee，如不同的重载版本；</p>
-</blockquote>
-<ul>
-<li><p><strong>执行被调方法</strong>：从栈中获得Parameter，以此为输入，执行Callee内部的逻辑；</p>
-</li>
-<li><p><strong>执行返回结果</strong>：将Callee的执行结果压栈，并将指令流恢复到Call Site处，据悉向下执行；</p>
-</li>
-</ul>
-<p>接下来，我们就需要考虑一下，<strong>当 println() 方法不在当前进程的内存地址空间中</strong>，会出现什么问题。</p>
-<p>不难想到，此时至少面临<strong>两个直接的障碍</strong>：</p>
-<ul>
-<li><p>第一个障碍：前面的<strong>第一步</strong>和<strong>第四步</strong>所做的<strong>传递参数、传回结果都依赖于栈内存的帮助</strong>，如果 Caller 与 Callee 分属不同的进程，就不会拥有相同的栈内存，那么在 Caller 进程的内存中将参数压栈，对于 Callee 进程的执行毫无意义；</p>
-</li>
-<li><p>第二个障碍：<strong>第二步的方法版本选择依赖于语言规则的定义</strong>，而如果 Caller 与 Callee 不是同一种语言实现的程序，方法版本选择就将是一项模糊的不可知行为；</p>
-</li>
-</ul>
-<blockquote>
-<p><em>为了简化，暂时忽略第二个障碍，假设 Caller 与 Callee 是使用同一种语言实现的；</em></p>
-</blockquote>
-<p>解决两个进程之间如何交换数据的问题，这件事情在计算机科学中被称为“<strong>进程间通讯</strong>”（Inter-Process Communication，IPC）。</p>
-<blockquote>
-<p><strong>管道&#x2F;具名管道</strong></p>
-</blockquote>
-<p>管道其实类似于两个进程间的桥梁，用于进程间传递少量的字符流或字节流。<strong>普通管道</strong>可用于<strong>有亲缘关系进程间的通信</strong>（由一个进程启动的另外一个进程）；而<strong>具名管道</strong>摆脱了普通管道没有名字的限制，除了具有普通管道所具有的功能以外，它还<strong>允许无亲缘关系进程间的通信</strong>。</p>
-<blockquote>
-<p><em>管道典型的应用就是命令行中的“ | ”操作符，比如说，命令“ps -ef | grep java”  ，就是管道操作符“ | ”将 ps 命令的标准输出通过管道，连接到 grep 命令的标准输入上。</em></p>
-</blockquote>
-<blockquote>
-<p><strong>信号（Signal）</strong></p>
-</blockquote>
-<p><strong>信号是用来通知目标进程有某种事件发生的</strong>。除了用于进程间通信外，信号还可以被进程发送给进程自身。信号的典型应用是 kill 命令，比如“kill -9 pid”，意思就是由 Shell 进程向指定 PID 的进程发送 SIGKILL 信号。</p>
-<blockquote>
-<p><strong>信号量（Semaphore）</strong></p>
-</blockquote>
-<p>信号量是用于两个进程之间同步协作的手段，相当于操作系统提供的一个特殊变量。我们可以在信号量上，进行 <code>wait()</code> 和 <code>notify()</code> 操作。</p>
-<blockquote>
-<p><strong>消息队列</strong></p>
-</blockquote>
-<p>前面所说的这三种方式，只适合传递少量信息，而 POSIX 标准中，有定义“消息队列”用于进程间通讯的方法。也就是说，进程可以向队列中添加消息，而被赋予读权限的进程则可以从队列中消费消息。消息队列就克服了信号承载信息量少、管道只能用于无格式字节流，以及缓冲区大小受限等缺点  ，但实时性相对受限。</p>
-<blockquote>
-<p><strong>共享内存</strong></p>
-</blockquote>
-<p>允许多个进程可以访问同一块内存空间，这是<strong>效率最高</strong>的进程间通讯形式。虽然进程的内存地址空间是独立隔离的，但<strong>OS提供了让进程主动创建、映射、分离、控制某一块内存的接口</strong>。由于内存是多进程共享的，所以往往会与其它通信机制如信号量等结合使用，来达到进程间的同步及互斥；</p>
-<blockquote>
-<p><strong>本地套接字接口（IPC Socket）</strong></p>
-</blockquote>
-<p>消息队列和共享内存这两种方式，只适合单机多进程间的通讯。而<strong>套接字接口</strong>，<strong>是更为普适的进程间通信机制</strong>，<strong>可用于不同机器之间的进程通信</strong>。</p>
-<p>基于效率考虑，当仅限于本机进程间通讯的时候，套接字接口是被优化过的，不会经过网络协议栈，不需要打包拆包、计算校验和、维护序号和应答等操作，只是简单地将应用层数据从一个进程拷贝至另一个进程，这种进程间通讯方式有个专有的名称 —— Unix Domain Socket，又叫做IPC Socket。</p>
-<blockquote>
-<p><em>套接字（Socket）起初是由 Unix 系统的 BSD 分支开发出来的，但现在已经移植到所有的 Unix 和 Linux 系统上了;</em></p>
-</blockquote>
-<h3 id="2）通信的成本"><a href="#2）通信的成本" class="headerlink" title="2）通信的成本"></a>2）通信的成本</h3><hr>
-<p>计算机科学家们最初的想法，是将 RPC 作为 IPC 的一种特例来看待（其实现在分类上这么说也仍然合适，只是在具体操作手段上不会这么做了）。</p>
-<p>这里，需要特别关注的是最后一种<strong>基于套接字接口的通讯方式</strong>（IPC Socket）。因为它不仅适用于本地相同机器的不同进程间通讯，而且因为 Socket 是网络栈的统一接口，它也理所当然地能支持基于网络的跨机器、跨进程的通讯。</p>
-<blockquote>
-<p><em>比如 Linux 系统的图形化界面中，X Window 服务器和 GUI 程序之间的交互，就是由这套机制来实现的。</em></p>
-</blockquote>
-<p>此外，这样做还有一个看起来无比诱人的好处。因为 <strong>IPC Socket 是操作系统提供的标准接口</strong>，所以它完全有可能把远程方法调用的通讯细节，隐藏在操作系统底层，从应用层面上来看，可以做到远程调用与本地方法调用几乎完全一致。</p>
-<p>事实上，在原始分布式时代的初期确实是奔着这个目标去做的，<strong>但这种透明的调用形式反而让程序员们误以为通信是无成本的，从而被滥用，以至于显著降低了分布式系统的性能。</strong></p>
-<blockquote>
-<p><em>1987 年，当“透明的 RPC 调用”一度成为主流范式的时候，安德鲁 · 塔能鲍姆（Andrew Tanenbaum）教授曾发表了一篇论文“A Critique of the Remote Procedure Call Paradigm”，对这种透明的 RPC 范式提出了一系列质问</em></p>
-<p><em>两个进程通讯，谁作为服务端，谁作为客户端？怎样进行异常处理？异常该如何让调用者获知？服务端出现多线程竞争之后怎么办？如何提高网络利用的效率，比如连接是否可被多个请求复用以减少开销？是否支持多播？参数、返回值如何表示？应该有怎样的字节序？如何保证网络的可靠性，比如调用期间某个链接忽然断开了怎么办？服务端发送请求后，收不到回复该怎么办？……</em></p>
-</blockquote>
-<p>论文的<strong>中心观点</strong>是：把本地调用与远程调用当作一样的来处理，是犯了方向性的错误，把系统间的调用做成透明的，反而会增加程序员工作的复杂度。</p>
-<p>最终，1994 年至 1997 年间，由 ACM 和 Sun 的院士Peter Deutsch、套接字接口发明者Bill Joy、Java 之父James Gosling等众多在 Sun Microsystems 工作的大佬们，<strong>共同总结了通过网络进行分布式运算的八宗罪</strong>（8 Fallacies of Distributed Computing）：</p>
-<ol>
-<li><p>网络是可靠的（The network is reliable）;</p>
-</li>
-<li><p>延迟是不存在的（Latency is zero ）;</p>
-</li>
-<li><p>带宽是无限的（Bandwidth is infinite）;</p>
-</li>
-<li><p>网络是安全的（The network is secure）;</p>
-</li>
-<li><p>拓扑结构是一成不变的（Topology doesn’t change）;</p>
-</li>
-<li><p>总会有一个管理员（There is one administrator）;</p>
-</li>
-<li><p>不考虑传输成本（Transport cost is zero）;</p>
-</li>
-<li><p>网络是同质化的（The network is homogeneous）;</p>
-</li>
-</ol>
-<p>这八宗罪，被认为是程序员在网络编程中经常忽略的八大问题，潜台词就是如果远程服务调用要弄透明化的话，就必须为这些罪过买单。这算是给 RPC 能否等同于 IPC 来实现，<strong>暂时</strong>定下了一个具有公信力的结论。</p>
-<p>到这时为止，<strong>RPC 应该是一种高层次的，或者说语言层次的特征，而不是像 IPC 那样，是低层次的，或者说系统层次的特征</strong>，就成为了工业界、学术界的主流观点。</p>
-<p>到此，可以得出RPC的定义：RPC是一种<strong>语言级别</strong>的通讯协议，它允许运行于一台计算机上的程序以某种管道作为通讯媒介（即某种传输协议的网络），去调用另外一个地址空间（通常为网络上的另一台计算机）。</p>
-<h3 id="3）小结"><a href="#3）小结" class="headerlink" title="3）小结"></a>3）小结</h3><hr>
-<p>这一讲，我们讨论了 RPC 的起源、概念，以及它发展上的一些分歧。以此为基础，我们才能更好地理解后面几讲要学习的内容，包括 RPC 本身要解决的三大问题、RPC 框架的现状与发展，以及它与 REST 的区别。RPC 以模拟进程间方法调用为起点，许多思想和概念都借鉴的是 IPC，因此这一讲我也介绍了 IPC 中的一些关键概念和实现方法。但是，RPC 原本想照着 IPC 的发展思路，却在实现层面上遇到了很大的困难。RPC 作为一种跨网络的通讯手段，能否无视通讯的成本去迁就编程和设计的原则，这一点从几十年前的 DCE 开始，直到今天学术界、工业界都还有争议。</p>
-<h3 id="一课一思"><a href="#一课一思" class="headerlink" title="一课一思"></a>一课一思</h3><hr>
-<p><strong>Q：远程方法不应该无视通讯成本”这个观点，从性能的角度来看是有益的，但从简单的角度看则是有害的。在现代的软件系统开发中，你用过什么 RPC 框架吗？它们有没有把“像本地方法一样调用远程方法”作为卖点？</strong></p>
-<p><img src="https://raw.githubusercontent.com/Tomorrowllbefine/Study/master/pics/image-7.png"></p>
-<blockquote>
-<p><em>– 2024.12.02</em></p>
-</blockquote>
-<h2 id="08-远程服务调用（下）：如何选择适合自己的RPC框架？"><a href="#08-远程服务调用（下）：如何选择适合自己的RPC框架？" class="headerlink" title="08 | 远程服务调用（下）：如何选择适合自己的RPC框架？"></a>08 | 远程服务调用（下）：如何选择适合自己的RPC框架？</h2><hr>
-<h3 id="Topic-01：RPC-框架要解决的三个问题"><a href="#Topic-01：RPC-框架要解决的三个问题" class="headerlink" title="Topic 01：RPC 框架要解决的三个问题"></a>Topic 01：RPC 框架要解决的三个问题</h3><p>RPC 框架要解决的三个问题：</p>
-<ul>
-<li><p>如何表示数据？</p>
-</li>
-<li><p>如何传递数据？</p>
-</li>
-<li><p>如何表示方法？</p>
-</li>
-</ul>
-<h4 id="1）如何表示数据？"><a href="#1）如何表示数据？" class="headerlink" title="1）如何表示数据？"></a>1）如何表示数据？</h4><hr>
-<p>此处的数据含义包括了<strong>传递给方法的参数，以及方法的返回值</strong>。无论是将参数传递给另外一个进程，还是从另外一个进程中取回执行结果，都会涉及<strong>应该如何表示</strong>的问题。</p>
-<ul>
-<li><p><strong>进程内的方法调用</strong>：使用程序语言内置的和程序员自定义的数据类型，可以很容易解决数据表示的问题；</p>
-</li>
-<li><p><strong>远程的方法调用</strong>：可能面临交互双方分属不同程序语言的情况。所以，即使是只支持同一种语言的 RPC 协议，在不同硬件指令集、不同操作系统下，也完全可能有不一样的表现细节，比如数据宽度、字节序的差异等；</p>
-</li>
-</ul>
-<p>行之有效的方法，是<strong>将交互双方涉及的数据，转换为某种事先约定好的中立数据流格式来传输，将数据流转换回不同语言中对应的数据类型来使用</strong>。</p>
-<blockquote>
-<p><em>这个过程说起来比较拗口，但其实就是<strong>序列化</strong>和<strong>反序列化</strong>；</em></p>
-</blockquote>
-<blockquote>
-<p><em>每种 RPC 协议都应该有对应的序列化协议</em></p>
-<ul>
-<li><p><em>ONC RPC 的External Data Representation （XDR）；</em></p>
-</li>
-<li><p><em>CORBA 的Common Data Representation（CDR）；</em></p>
-</li>
-<li><p><em>Java RMI 的Java Object Serialization Stream Protocol；</em></p>
-</li>
-<li><p><em>gRPC 的Protocol Buffers；</em></p>
-</li>
-<li><p><em>Web Service 的XML Serialization；</em></p>
-</li>
-<li><p><em>众多轻量级 RPC 支持的JSON Serialization；</em></p>
-</li>
-</ul>
-</blockquote>
-<h4 id="2）如何传递数据？"><a href="#2）如何传递数据？" class="headerlink" title="2）如何传递数据？"></a>2）如何传递数据？</h4><hr>
-<p>准确地说，如何传递数据是指<strong>如何通过网络，在两个服务 EndPoint 之间相互操作、交换数据</strong>。这里“传递数据”通常指<strong>应用层协议</strong>，一般基于TCP、UDP等传输层协议来完成。</p>
-<p>两个服务交互<strong>不仅仅只是传递一个序列化数据流来表示参数和结果</strong>就行了，诸如异常、超时、安全、认证、授权、事务等信息，都可以存在双方交换信息的需求。</p>
-<p><img src="https://raw.githubusercontent.com/Tomorrowllbefine/Study/master/pics/image-5.png"></p>
-<h4 id="3）如何表示方法？"><a href="#3）如何表示方法？" class="headerlink" title="3）如何表示方法？"></a>3）如何表示方法？</h4><hr>
-<p><strong>本地方法调用</strong>中，由于编译器或者解释器会根据语言规范，把调用的方法转换为进程地址空间中方法入口位置的指针。</p>
-<p>不过一旦考虑到<strong>不同语言</strong>，每门语言的方法签名都可能有所差别，针对 “如何表示一个方法” 和 “如何找到这些方法” 这两个问题，还是得有一个统一的标准。</p>
-<p>这个标准做起来其实可以很简单：<strong>只要给程序中的每个方法，都规定一个通用的又绝对不会重复的编号</strong>；在调用的时候，直接传这个编号就可以找到对应的方法。这种听起来无比寒碜的办法，还真的就是 DCE&#x2F;RPC 最初准备的解决方案。</p>
-<p>虽然最后，DCE 还是弄出了一套跟语言无关的接口描述语言（Interface Description Language，IDL），成为了此后许多 RPC 参考或依赖的基础（如 CORBA 的 OMG IDL），但那个唯一的“绝不重复”的编码方案<strong>UUID</strong>，却意外地流行了起来，已经被广泛应用到了程序开发的方方面面。</p>
-<p><img src="https://raw.githubusercontent.com/Tomorrowllbefine/Study/master/pics/image-1.png"></p>
-<p>如何表示数据、如何传递数据、如何表示方法这三个 RPC 中的基本问题，都可以在本地方法调用中找到对应的操作。</p>
-<p><strong>RPC 的思想始于本地方法调用</strong>，尽管它早就不再追求要跟本地方法调用的实现完全一样，但RPC的发展仍带有着本地方法调用深刻烙印。</p>
-<h3 id="Topic-02：统一的-RPC"><a href="#Topic-02：统一的-RPC" class="headerlink" title="Topic 02：统一的 RPC"></a>Topic 02：统一的 RPC</h3><hr>
-<p>理解了 RPC 要解决的三个基本问题以后，我们接着来看一下，现代的 RPC 框架都为我们提供了哪些可选的解决方案，以及为什么今天会有这么多的 RPC 框架在并行发展。</p>
-<h2 id="09-RESTful服务（上）：从面向过程编程到面向资源编程"><a href="#09-RESTful服务（上）：从面向过程编程到面向资源编程" class="headerlink" title="09 | RESTful服务（上）：从面向过程编程到面向资源编程"></a>09 | RESTful服务（上）：从面向过程编程到面向资源编程</h2><hr>
-<p><img src="https://raw.githubusercontent.com/Tomorrowllbefine/Study/master/pics/image-3.png"></p>
-]]></content>
-      <tags>
-        <tag>read-note</tag>
       </tags>
   </entry>
   <entry>
@@ -1003,6 +747,262 @@
 ]]></content>
       <tags>
         <tag>backend</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>技术阅读 | 软件架构课</title>
+    <url>/2024/12/22/%E3%80%8A%E8%BD%AF%E4%BB%B6%E6%9E%B6%E6%9E%84%E8%AF%BE%E3%80%8B/</url>
+    <content><![CDATA[<h1 id="一、演进中的架构"><a href="#一、演进中的架构" class="headerlink" title="一、演进中的架构"></a>一、演进中的架构</h1><h2 id="01-原始分布式时代：Unix设计哲学下的服务探索"><a href="#01-原始分布式时代：Unix设计哲学下的服务探索" class="headerlink" title="01 | 原始分布式时代：Unix设计哲学下的服务探索"></a>01 | 原始分布式时代：Unix设计哲学下的服务探索</h2><p><img src="https://raw.githubusercontent.com/Tomorrowllbefine/Study/master/pics/image-6.png"></p>
+<p>就我个人而言，我对”微服务中的简单”的理解，是指微服务中的每个服务，每一个中间件，服务中的每个接口，都是”简单”的，同时也应该以”简单“作为目标进行设计。</p>
+<p>正如很多前辈所言，微服务的出现，目的为了弥补单应用中存在的各个缺陷，如业务功能过多导致代码的耦合度很大，某个功能使用频繁高，占用资源多（本身这个功能可能跟业务无关，但是因为占用大量资源导致整个系统不可用）等等。</p>
+<span id="more"></span>
+
+<p>这个时候，我们可能会基于业务功能，对应用进行拆分，把每个业务拆分出来，做成一个微服务应用。功能模块的拆分有几个好处，一是在开发团队人员充足的情况下，每个人需要维护的代码变简单了，二是整个系统解耦了，每个服务也可以互相调用，换句话说就是系统的复用性变高了，三是，在单个微服务变得不可用的情况下，如果配置的好，是不会影响整个系统正常运行，从一定程度上提高了系统的可靠性和可用性。</p>
+<p>基于这个思路，我想中台和serveless的诞生，也是基于这些准则，比如在后期发现，随着业务不停扩展，代码中有好多功能是通用的，那么是不是可以把这些这些代码抽出来，做成一个个模块，给各个应用级的微服务应用进行调用呢？（基础平台的职责）</p>
+<p>当然，也正如老师所说的，就从整个架构来说，其实微服务并不是这么简单的，既然拆分了应用，那么不可避免的，你就会遇到这些问题：</p>
+<ol>
+<li><p>各个微服务之间怎么知道接口的地址在哪（服务发现和服务注册中间件）</p>
+</li>
+<li><p>服务之间该用什么协议进行通讯和接口的调用（rpc调用中间件）</p>
+</li>
+<li><p>某个服务突然不可用了，我又不能影响整个系统的可用性，我该怎么办（服务降级，熔断）</p>
+</li>
+<li><p>为了提高某个服务可用性，我做了集群（同样的服务，在不同的节点开了应用），我该怎么分配落在这个集群中的请求（负载均衡中间件）</p>
+</li>
+<li><p>外部怎么能够访问这个系统中的某个微服务（网关中间件）等等（如分布式系统中的锁设计和事务实现）</p>
+</li>
+</ol>
+<p>总而来说，“微服务的简单”，这个命题还挺有意思的，它就像一个有多个pics的乐高模型一样，对于每个pic的积木而言，确实很简单，但是就整体而言，它是由多块积木拼起来的，往往就比较，复杂，也需要我们去花心思去思考，去完成。</p>
+<p>我觉得”简单”二字，不仅仅一门艺术，同时也很考验我们程序员的技术和设计能力。我想这也是大部分程序员的目标和初衷吧。</p>
+<h2 id="03-SOA时代：成功理论与失败实践"><a href="#03-SOA时代：成功理论与失败实践" class="headerlink" title="03 | SOA时代：成功理论与失败实践"></a>03 | SOA时代：成功理论与失败实践</h2><p><img src="https://raw.githubusercontent.com/Tomorrowllbefine/Study/master/pics/image-9.png"></p>
+<p><strong>网友</strong>：</p>
+<p><img src="https://raw.githubusercontent.com/Tomorrowllbefine/Study/master/pics/image-10.png"></p>
+<p><img src="https://raw.githubusercontent.com/Tomorrowllbefine/Study/master/pics/image-8.png"></p>
+<h2 id="04-微服务时代：SOA的革命者"><a href="#04-微服务时代：SOA的革命者" class="headerlink" title="04 | 微服务时代：SOA的革命者"></a>04 | 微服务时代：SOA的革命者</h2><p>服务的注册发现、跟踪治理、负载均衡、故障隔离、认证授权、伸缩扩展、传输通讯、事务处理等问题，在微服务中，都不再会有统一的解决方案。</p>
+<h2 id="05-后微服务时代：跨越软件与硬件之间的界限"><a href="#05-后微服务时代：跨越软件与硬件之间的界限" class="headerlink" title="05 | 后微服务时代：跨越软件与硬件之间的界限"></a>05 | 后微服务时代：跨越软件与硬件之间的界限</h2><hr>
+<p>在微服务架构中，会面临一些必须要解决的问题，如注册发现、跟踪治理、复杂均衡、传输通讯等。</p>
+<p>但这些问题，实际上在SOA时代甚至可以说自原始分布式时代，就一直存在了。既然只要是分布式系统，就没办法完全避免这些问题，那反过来思考：<strong>这些问题需要分布式系统自己来解决吗？</strong></p>
+<p><strong>Q：分布式架构发展到服务网格后，真的是到达“最好的时代”了吗？软件架构的发展不太可能真的就此止步，你认为今天的云原生还有哪些主要矛盾，下一次软件架构的进化将会主要解决什么问题？</strong></p>
+<p><img src="https://raw.githubusercontent.com/Tomorrowllbefine/Study/master/pics/image.png"></p>
+<h2 id="06-无服务时代：“不分布式”云端系统的起点"><a href="#06-无服务时代：“不分布式”云端系统的起点" class="headerlink" title="06 | 无服务时代：“不分布式”云端系统的起点"></a>06 | 无服务时代：“不分布式”云端系统的起点</h2><hr>
+<p><strong>Q：你是否了解、接触过无服务架构？无服务目前在中国处于起步的发展阶段，阿里云、腾讯云的无服务计算框架，都给了普通用户相当大的免费额度，你愿意去试一下吗？</strong></p>
+<p><img src="https://raw.githubusercontent.com/Tomorrowllbefine/Study/master/pics/image-4.png"></p>
+<p><img src="https://raw.githubusercontent.com/Tomorrowllbefine/Study/master/pics/image-2.png"></p>
+<h1 id="二、架构师的视角"><a href="#二、架构师的视角" class="headerlink" title="二、架构师的视角"></a>二、架构师的视角</h1><h2 id="07-远程服务调用（上）：从本地方法到远程方法的桥梁"><a href="#07-远程服务调用（上）：从本地方法到远程方法的桥梁" class="headerlink" title="07 | 远程服务调用（上）：从本地方法到远程方法的桥梁"></a>07 | 远程服务调用（上）：从本地方法到远程方法的桥梁</h2><hr>
+<p><strong>RPC</strong> 出现的最初目的，就是为了<strong>让计算机能够跟调用本地方法一样，去调用远程方法</strong>。</p>
+<h3 id="1）进程间通讯"><a href="#1）进程间通讯" class="headerlink" title="1）进程间通讯"></a>1）进程间通讯</h3><p>先了解一下在本地方法调用时，发生了什么：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 调用者（Caller）      ： main()</span></span><br><span class="line"><span class="comment">// 被调用者（Callee）      ： println()</span></span><br><span class="line"><span class="comment">// 调用点（Call Site）   ： 发生方法调用的指令流位置</span></span><br><span class="line"><span class="comment">// 调用参数（Parameter） ： 由Caller传递给Callee的数据，即“hello world”</span></span><br><span class="line"><span class="comment">// 返回值（Retval）      ： 由Callee传递给Caller的数据，如果方法正常完成，返回值是void，否则是对应的异常</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">  System.out.println(“hello world”);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在不考虑编译器优化的前提下，程序运行至调用 <code>println()</code> 这一行时，计算机（物理机或虚拟机）会做以下事情：</p>
+<ul>
+<li><p><strong>传递方法参数</strong>：将字符串”hello world”的引用压栈；</p>
+</li>
+<li><p><strong>确定方法版本</strong>：根据<code>println()</code>方法的签名，确定它的执行版本其实并不是一个简单的过程，不管是编译时的静态解析也好，还是运行时的动态分配也好，程序都必须通过某些语言规范中明确定义的原则，找到明确的被调用者Callee。</p>
+</li>
+</ul>
+<blockquote>
+<p>此处的明确指唯一一个Callee，或者有严格优先级的多个Callee，如不同的重载版本；</p>
+</blockquote>
+<ul>
+<li><p><strong>执行被调方法</strong>：从栈中获得Parameter，以此为输入，执行Callee内部的逻辑；</p>
+</li>
+<li><p><strong>执行返回结果</strong>：将Callee的执行结果压栈，并将指令流恢复到Call Site处，据悉向下执行；</p>
+</li>
+</ul>
+<p>接下来，我们就需要考虑一下，<strong>当 println() 方法不在当前进程的内存地址空间中</strong>，会出现什么问题。</p>
+<p>不难想到，此时至少面临<strong>两个直接的障碍</strong>：</p>
+<ul>
+<li><p>第一个障碍：前面的<strong>第一步</strong>和<strong>第四步</strong>所做的<strong>传递参数、传回结果都依赖于栈内存的帮助</strong>，如果 Caller 与 Callee 分属不同的进程，就不会拥有相同的栈内存，那么在 Caller 进程的内存中将参数压栈，对于 Callee 进程的执行毫无意义；</p>
+</li>
+<li><p>第二个障碍：<strong>第二步的方法版本选择依赖于语言规则的定义</strong>，而如果 Caller 与 Callee 不是同一种语言实现的程序，方法版本选择就将是一项模糊的不可知行为；</p>
+</li>
+</ul>
+<blockquote>
+<p><em>为了简化，暂时忽略第二个障碍，假设 Caller 与 Callee 是使用同一种语言实现的；</em></p>
+</blockquote>
+<p>解决两个进程之间如何交换数据的问题，这件事情在计算机科学中被称为“<strong>进程间通讯</strong>”（Inter-Process Communication，IPC）。</p>
+<blockquote>
+<p><strong>管道&#x2F;具名管道</strong></p>
+</blockquote>
+<p>管道其实类似于两个进程间的桥梁，用于进程间传递少量的字符流或字节流。<strong>普通管道</strong>可用于<strong>有亲缘关系进程间的通信</strong>（由一个进程启动的另外一个进程）；而<strong>具名管道</strong>摆脱了普通管道没有名字的限制，除了具有普通管道所具有的功能以外，它还<strong>允许无亲缘关系进程间的通信</strong>。</p>
+<blockquote>
+<p><em>管道典型的应用就是命令行中的“ | ”操作符，比如说，命令“ps -ef | grep java”  ，就是管道操作符“ | ”将 ps 命令的标准输出通过管道，连接到 grep 命令的标准输入上。</em></p>
+</blockquote>
+<blockquote>
+<p><strong>信号（Signal）</strong></p>
+</blockquote>
+<p><strong>信号是用来通知目标进程有某种事件发生的</strong>。除了用于进程间通信外，信号还可以被进程发送给进程自身。信号的典型应用是 kill 命令，比如“kill -9 pid”，意思就是由 Shell 进程向指定 PID 的进程发送 SIGKILL 信号。</p>
+<blockquote>
+<p><strong>信号量（Semaphore）</strong></p>
+</blockquote>
+<p>信号量是用于两个进程之间同步协作的手段，相当于操作系统提供的一个特殊变量。我们可以在信号量上，进行 <code>wait()</code> 和 <code>notify()</code> 操作。</p>
+<blockquote>
+<p><strong>消息队列</strong></p>
+</blockquote>
+<p>前面所说的这三种方式，只适合传递少量信息，而 POSIX 标准中，有定义“消息队列”用于进程间通讯的方法。也就是说，进程可以向队列中添加消息，而被赋予读权限的进程则可以从队列中消费消息。消息队列就克服了信号承载信息量少、管道只能用于无格式字节流，以及缓冲区大小受限等缺点  ，但实时性相对受限。</p>
+<blockquote>
+<p><strong>共享内存</strong></p>
+</blockquote>
+<p>允许多个进程可以访问同一块内存空间，这是<strong>效率最高</strong>的进程间通讯形式。虽然进程的内存地址空间是独立隔离的，但<strong>OS提供了让进程主动创建、映射、分离、控制某一块内存的接口</strong>。由于内存是多进程共享的，所以往往会与其它通信机制如信号量等结合使用，来达到进程间的同步及互斥；</p>
+<blockquote>
+<p><strong>本地套接字接口（IPC Socket）</strong></p>
+</blockquote>
+<p>消息队列和共享内存这两种方式，只适合单机多进程间的通讯。而<strong>套接字接口</strong>，<strong>是更为普适的进程间通信机制</strong>，<strong>可用于不同机器之间的进程通信</strong>。</p>
+<p>基于效率考虑，当仅限于本机进程间通讯的时候，套接字接口是被优化过的，不会经过网络协议栈，不需要打包拆包、计算校验和、维护序号和应答等操作，只是简单地将应用层数据从一个进程拷贝至另一个进程，这种进程间通讯方式有个专有的名称 —— Unix Domain Socket，又叫做IPC Socket。</p>
+<blockquote>
+<p><em>套接字（Socket）起初是由 Unix 系统的 BSD 分支开发出来的，但现在已经移植到所有的 Unix 和 Linux 系统上了;</em></p>
+</blockquote>
+<h3 id="2）通信的成本"><a href="#2）通信的成本" class="headerlink" title="2）通信的成本"></a>2）通信的成本</h3><hr>
+<p>计算机科学家们最初的想法，是将 RPC 作为 IPC 的一种特例来看待（其实现在分类上这么说也仍然合适，只是在具体操作手段上不会这么做了）。</p>
+<p>这里，需要特别关注的是最后一种<strong>基于套接字接口的通讯方式</strong>（IPC Socket）。因为它不仅适用于本地相同机器的不同进程间通讯，而且因为 Socket 是网络栈的统一接口，它也理所当然地能支持基于网络的跨机器、跨进程的通讯。</p>
+<blockquote>
+<p><em>比如 Linux 系统的图形化界面中，X Window 服务器和 GUI 程序之间的交互，就是由这套机制来实现的。</em></p>
+</blockquote>
+<p>此外，这样做还有一个看起来无比诱人的好处。因为 <strong>IPC Socket 是操作系统提供的标准接口</strong>，所以它完全有可能把远程方法调用的通讯细节，隐藏在操作系统底层，从应用层面上来看，可以做到远程调用与本地方法调用几乎完全一致。</p>
+<p>事实上，在原始分布式时代的初期确实是奔着这个目标去做的，<strong>但这种透明的调用形式反而让程序员们误以为通信是无成本的，从而被滥用，以至于显著降低了分布式系统的性能。</strong></p>
+<blockquote>
+<p><em>1987 年，当“透明的 RPC 调用”一度成为主流范式的时候，安德鲁 · 塔能鲍姆（Andrew Tanenbaum）教授曾发表了一篇论文“A Critique of the Remote Procedure Call Paradigm”，对这种透明的 RPC 范式提出了一系列质问</em></p>
+<p><em>两个进程通讯，谁作为服务端，谁作为客户端？怎样进行异常处理？异常该如何让调用者获知？服务端出现多线程竞争之后怎么办？如何提高网络利用的效率，比如连接是否可被多个请求复用以减少开销？是否支持多播？参数、返回值如何表示？应该有怎样的字节序？如何保证网络的可靠性，比如调用期间某个链接忽然断开了怎么办？服务端发送请求后，收不到回复该怎么办？……</em></p>
+</blockquote>
+<p>论文的<strong>中心观点</strong>是：把本地调用与远程调用当作一样的来处理，是犯了方向性的错误，把系统间的调用做成透明的，反而会增加程序员工作的复杂度。</p>
+<p>最终，1994 年至 1997 年间，由 ACM 和 Sun 的院士Peter Deutsch、套接字接口发明者Bill Joy、Java 之父James Gosling等众多在 Sun Microsystems 工作的大佬们，<strong>共同总结了通过网络进行分布式运算的八宗罪</strong>（8 Fallacies of Distributed Computing）：</p>
+<ol>
+<li><p>网络是可靠的（The network is reliable）;</p>
+</li>
+<li><p>延迟是不存在的（Latency is zero ）;</p>
+</li>
+<li><p>带宽是无限的（Bandwidth is infinite）;</p>
+</li>
+<li><p>网络是安全的（The network is secure）;</p>
+</li>
+<li><p>拓扑结构是一成不变的（Topology doesn’t change）;</p>
+</li>
+<li><p>总会有一个管理员（There is one administrator）;</p>
+</li>
+<li><p>不考虑传输成本（Transport cost is zero）;</p>
+</li>
+<li><p>网络是同质化的（The network is homogeneous）;</p>
+</li>
+</ol>
+<p>这八宗罪，被认为是程序员在网络编程中经常忽略的八大问题，潜台词就是如果远程服务调用要弄透明化的话，就必须为这些罪过买单。这算是给 RPC 能否等同于 IPC 来实现，<strong>暂时</strong>定下了一个具有公信力的结论。</p>
+<p>到这时为止，<strong>RPC 应该是一种高层次的，或者说语言层次的特征，而不是像 IPC 那样，是低层次的，或者说系统层次的特征</strong>，就成为了工业界、学术界的主流观点。</p>
+<p>到此，可以得出RPC的定义：RPC是一种<strong>语言级别</strong>的通讯协议，它允许运行于一台计算机上的程序以某种管道作为通讯媒介（即某种传输协议的网络），去调用另外一个地址空间（通常为网络上的另一台计算机）。</p>
+<h3 id="3）小结"><a href="#3）小结" class="headerlink" title="3）小结"></a>3）小结</h3><hr>
+<p>这一讲，我们讨论了 RPC 的起源、概念，以及它发展上的一些分歧。以此为基础，我们才能更好地理解后面几讲要学习的内容，包括 RPC 本身要解决的三大问题、RPC 框架的现状与发展，以及它与 REST 的区别。RPC 以模拟进程间方法调用为起点，许多思想和概念都借鉴的是 IPC，因此这一讲我也介绍了 IPC 中的一些关键概念和实现方法。但是，RPC 原本想照着 IPC 的发展思路，却在实现层面上遇到了很大的困难。RPC 作为一种跨网络的通讯手段，能否无视通讯的成本去迁就编程和设计的原则，这一点从几十年前的 DCE 开始，直到今天学术界、工业界都还有争议。</p>
+<h3 id="一课一思"><a href="#一课一思" class="headerlink" title="一课一思"></a>一课一思</h3><hr>
+<p><strong>Q：远程方法不应该无视通讯成本”这个观点，从性能的角度来看是有益的，但从简单的角度看则是有害的。在现代的软件系统开发中，你用过什么 RPC 框架吗？它们有没有把“像本地方法一样调用远程方法”作为卖点？</strong></p>
+<p><img src="https://raw.githubusercontent.com/Tomorrowllbefine/Study/master/pics/image-7.png"></p>
+<blockquote>
+<p><em>– 2024.12.02</em></p>
+</blockquote>
+<h2 id="08-远程服务调用（下）：如何选择适合自己的RPC框架？"><a href="#08-远程服务调用（下）：如何选择适合自己的RPC框架？" class="headerlink" title="08 | 远程服务调用（下）：如何选择适合自己的RPC框架？"></a>08 | 远程服务调用（下）：如何选择适合自己的RPC框架？</h2><hr>
+<h3 id="Topic-01：RPC-框架要解决的三个问题"><a href="#Topic-01：RPC-框架要解决的三个问题" class="headerlink" title="Topic 01：RPC 框架要解决的三个问题"></a>Topic 01：RPC 框架要解决的三个问题</h3><p>RPC 框架要解决的三个问题：</p>
+<ul>
+<li><p>如何表示数据？</p>
+</li>
+<li><p>如何传递数据？</p>
+</li>
+<li><p>如何表示方法？</p>
+</li>
+</ul>
+<h4 id="1）如何表示数据？"><a href="#1）如何表示数据？" class="headerlink" title="1）如何表示数据？"></a>1）如何表示数据？</h4><hr>
+<p>此处的数据含义包括了<strong>传递给方法的参数，以及方法的返回值</strong>。无论是将参数传递给另外一个进程，还是从另外一个进程中取回执行结果，都会涉及<strong>应该如何表示</strong>的问题。</p>
+<ul>
+<li><p><strong>进程内的方法调用</strong>：使用程序语言内置的和程序员自定义的数据类型，可以很容易解决数据表示的问题；</p>
+</li>
+<li><p><strong>远程的方法调用</strong>：可能面临交互双方分属不同程序语言的情况。所以，即使是只支持同一种语言的 RPC 协议，在不同硬件指令集、不同操作系统下，也完全可能有不一样的表现细节，比如数据宽度、字节序的差异等；</p>
+</li>
+</ul>
+<p>行之有效的方法，是<strong>将交互双方涉及的数据，转换为某种事先约定好的中立数据流格式来传输，将数据流转换回不同语言中对应的数据类型来使用</strong>。</p>
+<blockquote>
+<p><em>这个过程说起来比较拗口，但其实就是<strong>序列化</strong>和<strong>反序列化</strong>；</em></p>
+</blockquote>
+<blockquote>
+<p><em>每种 RPC 协议都应该有对应的序列化协议</em></p>
+<ul>
+<li><p><em>ONC RPC 的External Data Representation （XDR）；</em></p>
+</li>
+<li><p><em>CORBA 的Common Data Representation（CDR）；</em></p>
+</li>
+<li><p><em>Java RMI 的Java Object Serialization Stream Protocol；</em></p>
+</li>
+<li><p><em>gRPC 的Protocol Buffers；</em></p>
+</li>
+<li><p><em>Web Service 的XML Serialization；</em></p>
+</li>
+<li><p><em>众多轻量级 RPC 支持的JSON Serialization；</em></p>
+</li>
+</ul>
+</blockquote>
+<h4 id="2）如何传递数据？"><a href="#2）如何传递数据？" class="headerlink" title="2）如何传递数据？"></a>2）如何传递数据？</h4><hr>
+<p>准确地说，如何传递数据是指<strong>如何通过网络，在两个服务 EndPoint 之间相互操作、交换数据</strong>。这里“传递数据”通常指<strong>应用层协议</strong>，一般基于TCP、UDP等传输层协议来完成。</p>
+<p>两个服务交互<strong>不仅仅只是传递一个序列化数据流来表示参数和结果</strong>就行了，诸如异常、超时、安全、认证、授权、事务等信息，都可以存在双方交换信息的需求。</p>
+<p><img src="https://raw.githubusercontent.com/Tomorrowllbefine/Study/master/pics/image-5.png"></p>
+<h4 id="3）如何表示方法？"><a href="#3）如何表示方法？" class="headerlink" title="3）如何表示方法？"></a>3）如何表示方法？</h4><hr>
+<p><strong>本地方法调用</strong>中，由于编译器或者解释器会根据语言规范，把调用的方法转换为进程地址空间中方法入口位置的指针。</p>
+<p>不过一旦考虑到<strong>不同语言</strong>，每门语言的方法签名都可能有所差别，针对 “如何表示一个方法” 和 “如何找到这些方法” 这两个问题，还是得有一个统一的标准。</p>
+<p>这个标准做起来其实可以很简单：<strong>只要给程序中的每个方法，都规定一个通用的又绝对不会重复的编号</strong>；在调用的时候，直接传这个编号就可以找到对应的方法。这种听起来无比寒碜的办法，还真的就是 DCE&#x2F;RPC 最初准备的解决方案。</p>
+<p>虽然最后，DCE 还是弄出了一套跟语言无关的接口描述语言（Interface Description Language，IDL），成为了此后许多 RPC 参考或依赖的基础（如 CORBA 的 OMG IDL），但那个唯一的“绝不重复”的编码方案<strong>UUID</strong>，却意外地流行了起来，已经被广泛应用到了程序开发的方方面面。</p>
+<p><img src="https://raw.githubusercontent.com/Tomorrowllbefine/Study/master/pics/image-1.png"></p>
+<p>如何表示数据、如何传递数据、如何表示方法这三个 RPC 中的基本问题，都可以在本地方法调用中找到对应的操作。</p>
+<p><strong>RPC 的思想始于本地方法调用</strong>，尽管它早就不再追求要跟本地方法调用的实现完全一样，但RPC的发展仍带有着本地方法调用深刻烙印。</p>
+<h3 id="Topic-02：统一的-RPC"><a href="#Topic-02：统一的-RPC" class="headerlink" title="Topic 02：统一的 RPC"></a>Topic 02：统一的 RPC</h3><hr>
+<p>理解了 RPC 要解决的三个基本问题以后，我们接着来看一下，现代的 RPC 框架都为我们提供了哪些可选的解决方案，以及为什么今天会有这么多的 RPC 框架在并行发展。</p>
+<h2 id="09-RESTful服务（上）：从面向过程编程到面向资源编程"><a href="#09-RESTful服务（上）：从面向过程编程到面向资源编程" class="headerlink" title="09 | RESTful服务（上）：从面向过程编程到面向资源编程"></a>09 | RESTful服务（上）：从面向过程编程到面向资源编程</h2><hr>
+<p><img src="https://raw.githubusercontent.com/Tomorrowllbefine/Study/master/pics/image-3.png"></p>
+]]></content>
+      <tags>
+        <tag>read-note</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>算法 | 分治</title>
+    <url>/2024/12/20/%E5%88%86%E6%B2%BB%E6%B3%95/</url>
+    <content><![CDATA[<h1 id="练习"><a href="#练习" class="headerlink" title="练习"></a>练习</h1><h3 id="Q1：求序列第二大元素"><a href="#Q1：求序列第二大元素" class="headerlink" title="Q1：求序列第二大元素"></a>Q1：求序列第二大元素</h3><p><img src="/Pasted%20image%2020230513151811.png"><br><strong>解</strong>：<br>在分治算法中，当$n&#x3D;2$时，只需要一次比较即可找到第二大元素。当$n&gt;2$时，需要分别在两个子数组中找到第一大和第二大的元素，然后再进行$2$次比较，从而得到整个数组的第二大元素。</p>
+<span id="more"></span>
+
+<p>假设找到第一大和第二大的元素需要 $T(n)$ 次比较。在分治算法中，我们将数组分成了两个大小为 $n&#x2F;2$ 的子数组，因此我们需要分别在这两个子数组中找到第一大和第二大的元素。由于递归地进行该算法，所以需要进行两次比较。因此，总共需要进行 $2T(n&#x2F;2) + 2$ 次比较。</p>
+<p>当 $n&#x3D;2^k$ 时，递归的深度为 $k$，此时数组中的元素个数为 $2^k$。因此，比较的次数为：</p>
+<p>$$<br>\begin{aligned}<br>T(n) &amp;&#x3D; 2T(n&#x2F;2) + 2 \<br>&amp;&#x3D; 2(2T(n&#x2F;4) + 2) + 2 \<br>&amp;&#x3D; 2^2 T(n&#x2F;2^2) + 2^2 + 2 \<br>&amp;\quad \vdots \<br>&amp;&#x3D; 2^k T(1) + 2^k - 2 \<br>&amp;&#x3D; n - 2 + \frac{n}{2} \<br>&amp;&#x3D; \frac{3n}{2} - 2<br>\end{aligned}<br>$$</p>
+<p>因此，当 $n&#x3D;2^k$ 时，该算法的比较次数为 $3n&#x2F;2 - 2$，选项 $\mathbf{D}$ 是正确的。</p>
+<h3 id="Q2：主定理运用"><a href="#Q2：主定理运用" class="headerlink" title="Q2：主定理运用"></a>Q2：主定理运用</h3><p><img src="/Pasted%20image%2020230513153733.png"><br><strong>解</strong>：<br>该问题中的分治算法的时间复杂度由分治的步骤和治的步骤两部分组成。在分治的步骤中，问题被分成多个规模较小的子问题；在治的步骤中，对每个子问题进行处理。<br><img src="/Pasted%20image%2020230513153853.png" alt="500"><br>在选项 A 中，问题每步被分成 4 个规模均为 n&#x2F;2 的子问题，这是一种类似于四分的方式。在治的步骤中，处理每个子问题的时间复杂度是 Θ(n)。因此，总时间复杂度可以用递归式表示为：**T(n) &#x3D; 4T(n&#x2F;2) + Θ(n)**。 根据主定理，这个递归式的解是 Θ(n^2)。因此，选项 A 的时间复杂度是 Θ(n^2)。</p>
+<p>在选项 B 中，问题每步被分成 2 个规模均为 n&#x2F;2 的子问题，这是一种类似于二分的方式。在治的步骤中，处理每个子问题的时间复杂度是 Θ(n^2)。因此，总时间复杂度可以用递归式表示为：**T(n) &#x3D; 2T(n&#x2F;2) + Θ(n^2)**。 根据主定理，这个递归式的解是 Θ(n^2 log n)。因此，选项 B 的时间复杂度是 Θ(n^2 log n)。</p>
+<p>在选项 C 中，问题每步被分成 7 个规模均为 n&#x2F;3 的子问题。在治的步骤中，处理每个子问题的时间复杂度是 Θ(n)。因此，总时间复杂度可以用递归式表示为：**T(n) &#x3D; 7T(n&#x2F;3) + Θ(n)**。 根据主定理，这个递归式的解是 Θ(n^log3 7)。因此，选项 C 的时间复杂度是 Θ(n^1.77)。</p>
+<p>在选项 D 中，问题每步被分成 5 个规模均为 n&#x2F;3 的子问题。在治的步骤中，处理每个子问题的时间复杂度是 Θ(n^2)。因此，总时间复杂度可以用递归式表示为：**T(n) &#x3D; 5T(n&#x2F;3) + Θ(n^2)*<em>。根据主定理，这个递归式的解是 Θ(n^2</em> log3 5) ≈ Θ(1.464 * n^2)。因此，选项 D 的时间复杂度最快，是 Θ(n^1.464)。</p>
+<p>因此，选项 D 是最快的。</p>
+<h3 id="Q3"><a href="#Q3" class="headerlink" title="Q3"></a>Q3</h3><p><img src="/Pasted%20image%2020230513214506.png"><br><strong>解</strong>：<br>当输入数组 A[1…n]由相等的 n 个元素组成时，快速排序算法 QUICKSORT 的运算特征如下：</p>
+<p>A. 运行时间为 Θ(n log n)。在最坏情况下，每次划分只能减少一个元素，递推式为 T(n) &#x3D; T(n-1) + Θ(n)，解得 T(n) &#x3D; Θ(n^2)；但是，在平均情况下，每次划分可以将序列分为两部分，递推式为 T(n) &#x3D; 2T(n&#x2F;2) + Θ(n)，解得 T(n) &#x3D; Θ(n log n)。</p>
+<p>B. 元素交换次数为 Θ(n)，因为在每次划分结束后，枢轴元素会被放置到其最终位置上，而其他元素都会被分到枢轴元素的左边或右边，因此只需要进行一次交换。</p>
+<p>C. 元素比较次数为 Θ(n log n)，因为在每次划分中，每个元素最多只会与一个枢轴元素进行比较，而划分的次数为 O(log n)，因此总的比较次数为 Θ(n log n)。</p>
+<p>D. 当输入数组 A[1…n]由相等的 n 个元素组成时，每次执行划分过程 SPLIT 后划分出的子序列中有可能存在一个为空。例如，假设枢轴元素取第一个元素，输入数组为 A&#x3D;{1, 1, 1, …, 1}，则在第一次划分后，所有元素都被划分到了右侧子序列中，左侧子序列为空。</p>
+<p>因此，选项 A、B、C 均为正确的，选项 D 不正确。</p>
+<h3 id="Q4："><a href="#Q4：" class="headerlink" title="Q4："></a>Q4：</h3><p><img src="/Pasted%20image%2020230513215034.png"><br><strong>解</strong>：<br>当输入数组 A[1…n]由相等的 n 个元素组成时，快速排序算法 QUICKSORT 的运行特征是每次划分都会将枢轴元素放置在其最终位置上，并将小于（或等于）枢轴元素的元素分到枢轴元素的左边，大于枢轴元素的元素分到枢轴元素的右边。因此，在一个序列中，如果所有元素都相等，则每次划分后，枢轴元素左侧和右侧的子序列都不包含任何元素。由于左侧子序列为空，故枢轴元素必然为该子序列的第一个元素，即为 A[1]。而对于右侧子序列，由于其中也不存在任何元素，因此可以认为其不存在，因此 A[2], A[3], …, A[n]的顺序可以随意排列。</p>
+<p>因此，选项 A 为正确答案，选项 B、C、D 均不正确。</p>
+<h1 id="知识点"><a href="#知识点" class="headerlink" title="知识点"></a>知识点</h1><h2 id="QuickSort"><a href="#QuickSort" class="headerlink" title="QuickSort"></a>QuickSort</h2><blockquote>
+<p>具体步骤解析见 P112-p115</p>
+</blockquote>
+<h3 id="Split-算法"><a href="#Split-算法" class="headerlink" title="Split 算法"></a>Split 算法</h3><figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="comment">//返回最终a[low]在序列中的下标</span></span><br><span class="line"><span class="comment">//左闭右闭</span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">split</span><span class="params">(<span class="type">int</span> a[], <span class="type">int</span> low, <span class="type">int</span> high )</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="type">int</span> i = low; <span class="comment">// 主元素</span></span><br><span class="line">	<span class="type">int</span> x = a[low];</span><br><span class="line">	<span class="keyword">for</span>( <span class="type">int</span> j = low + <span class="number">1</span>; j &lt;= high; j++)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">if</span>(a[j] &lt;= x)&#123; <span class="comment">//发现小于x的元素</span></span><br><span class="line">			i++;</span><br><span class="line">			<span class="keyword">if</span>(i!=j) <span class="built_in">swap</span>(a[j], a[i]);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="built_in">swap</span>(a[low],a[i]);</span><br><span class="line">	<span class="keyword">return</span> i;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>复杂度分析：</p>
+<ul>
+<li>时间复杂度：$O(n)$；</li>
+<li>空间复杂度：$O(1)$；</li>
+</ul>
+<h3 id="主算法"><a href="#主算法" class="headerlink" title="主算法"></a>主算法</h3><figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="comment">//左闭右闭</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">QuickSort</span><span class="params">(<span class="type">int</span> a[],<span class="type">int</span> low, <span class="type">int</span> high)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">if</span>(low&lt;high)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="type">int</span> pivot = <span class="built_in">split</span>(a,low,high); <span class="comment">//排序后当前主元素所在的下标</span></span><br><span class="line">		<span class="comment">//递归调用左右两部分，直至当前区间只有一个元素</span></span><br><span class="line">		<span class="built_in">QuickSort</span>(a, low, pivot<span class="number">-1</span>);</span><br><span class="line">		<span class="built_in">QuickSort</span>(a, pivot<span class="number">+1</span>, high);</span><br><span class="line">	&#125;</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">	快速排序</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="comment">//以low为主元素，将序列元素划分为两部分 [ &lt;=a[low], a[low], &gt;a[low] ]</span></span><br><span class="line"><span class="comment">//返回最终a[low]在序列中的下标</span></span><br><span class="line"><span class="comment">//左闭右闭</span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">split</span><span class="params">(<span class="type">int</span> a[], <span class="type">int</span> low, <span class="type">int</span> high )</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="type">int</span> i = low; <span class="comment">// 主元素</span></span><br><span class="line">	<span class="type">int</span> x = a[low];</span><br><span class="line">	<span class="keyword">for</span>( <span class="type">int</span> j = low + <span class="number">1</span>; j &lt;= high; j++)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">if</span>(a[j] &lt;= x)&#123; <span class="comment">//发现小于x的元素</span></span><br><span class="line">			i++;</span><br><span class="line">			<span class="keyword">if</span>(i!=j) <span class="built_in">swap</span>(a[j], a[i]);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="built_in">swap</span>(a[low],a[i]);</span><br><span class="line">	<span class="keyword">return</span> i;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//左闭右闭</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">QuickSort</span><span class="params">(<span class="type">int</span> a[],<span class="type">int</span> low, <span class="type">int</span> high)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">if</span>(low&lt;high)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="type">int</span> pivot = <span class="built_in">split</span>(a,low,high); <span class="comment">//排序后当前主元素所在的下标</span></span><br><span class="line">		<span class="built_in">QuickSort</span>(a, low, pivot<span class="number">-1</span>);</span><br><span class="line">		<span class="built_in">QuickSort</span>(a, pivot<span class="number">+1</span>, high);</span><br><span class="line">	&#125;</span><br><span class="line"> &#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="type">int</span> a[<span class="number">9</span>] = &#123;<span class="number">0</span>,<span class="number">5</span>,<span class="number">7</span>,<span class="number">1</span>,<span class="number">6</span>,<span class="number">4</span>,<span class="number">8</span>,<span class="number">3</span>,<span class="number">2</span>&#125;;</span><br><span class="line">	<span class="built_in">QuickSort</span>(a,<span class="number">1</span>,<span class="number">8</span>);</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">1</span>; i&lt;=<span class="number">8</span>;i++) cout&lt;&lt;a[i]&lt;&lt;<span class="string">&quot; &quot;</span>;</span><br><span class="line">	cout&lt;&lt;endl;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="复杂度分析"><a href="#复杂度分析" class="headerlink" title="复杂度分析"></a>复杂度分析</h3><ul>
+<li><strong>时间复杂度</strong>：$O(nlogn)$<br>最坏情况下：每一轮 split 得到的位置都为 low，即 pivot &#x3D; low，那么每一轮的两次分治都有其一支是没有用的，因此主函数的复杂度为 $O(n)$，综合起来最坏情况下的时间复杂度为$O(n^2)$；<br>最优情况下，每一轮 split 得到的位置为中项的位置，时间复杂度为$O(nlogn)$；</li>
+<li><strong>空间复杂度</strong>：$O(n)$</li>
+</ul>
+]]></content>
+      <categories>
+        <category>Algorithm</category>
+      </categories>
+      <tags>
+        <tag>Algorithm</tag>
+        <tag>分治</tag>
       </tags>
   </entry>
 </search>
