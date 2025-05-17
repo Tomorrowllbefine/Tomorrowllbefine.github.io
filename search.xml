@@ -1742,9 +1742,9 @@
       </tags>
   </entry>
   <entry>
-    <title>Mysql | 《MySQL是怎样运行的》</title>
-    <url>/2025/05/05/Mysql%E6%B7%B1%E5%85%A5/</url>
-    <content><![CDATA[<h1 id="【】Mysql基于规则的优化"><a href="#【】Mysql基于规则的优化" class="headerlink" title="【】Mysql基于规则的优化"></a>【】Mysql基于规则的优化</h1><blockquote>
+    <title>技术阅读 | 《MySQL是怎样运行的》</title>
+    <url>/2025/05/17/Mysql%E6%B7%B1%E5%85%A5/</url>
+    <content><![CDATA[<h1 id="Mysql基于规则的优化（内含子查询优化）"><a href="#Mysql基于规则的优化（内含子查询优化）" class="headerlink" title="Mysql基于规则的优化（内含子查询优化）"></a>Mysql基于规则的优化（内含子查询优化）</h1><blockquote>
 <p>本节介绍一些SQL中优化器的一些常见规则，实际上执行SQL命令已经将日常写的劣质SQL进行一轮优化了（感谢Mysql大叔）。主要是理解过个眼熟，需要的时候再回头查阅吧。</p>
 </blockquote>
 <h2 id="Topic-1：条件化简"><a href="#Topic-1：条件化简" class="headerlink" title="Topic 1：条件化简"></a>Topic 1：条件化简</h2><h2 id="Topic-2：外连接消除"><a href="#Topic-2：外连接消除" class="headerlink" title="Topic 2：外连接消除"></a>Topic 2：外连接消除</h2><h2 id="Topic-3：子查询优化"><a href="#Topic-3：子查询优化" class="headerlink" title="Topic 3：子查询优化"></a>Topic 3：子查询优化</h2><h4 id="01：子查询基础知识"><a href="#01：子查询基础知识" class="headerlink" title="01：子查询基础知识"></a>01：子查询基础知识</h4><hr>
@@ -1827,6 +1827,7 @@
 <blockquote>
 <p>具体大小取决于机器配置以及实际需要，若有<code>512G</code>内存，分配个几百G作为<code>Buffer Pool</code>也可以；</p>
 </blockquote>
+<p></br></br></p>
 <h3 id="02：Buffer-Pool-内部组成"><a href="#02：Buffer-Pool-内部组成" class="headerlink" title="02：Buffer Pool 内部组成"></a>02：Buffer Pool 内部组成</h3><hr>
 <p>在Buffer Pool中缓存的缓存页大小与磁盘上的一致，都是16KB。为了更好的管理这些在<code>Buffer Pool</code>中的缓存页，设计者为每一个缓存页都创建了一些所谓的<code>控制信息</code>，这些控制信息包括该页所属的表空间编号、页号、缓存页在<code>Buffer Pool</code>中的地址、链表节点信息、一些锁信息以及<code>LSN</code>信息。</p>
 <p><strong>每个缓存页对应的控制信息占用的内存大小是相同的</strong>，每个页对应的控制信息占用的一块内存称为一个<code>控制块</code>，<strong>控制块和缓存页是一一对应的</strong>，它们都被存放到 Buffer Pool 中。其中控制块被存放到 Buffer Pool 的前边，缓存页被存放到 Buffer Pool 后边，分配控制块及缓存页后不足以组成新的块的内存空间就是<code>碎片</code>，整体如下图：</p>
@@ -1835,6 +1836,7 @@
 <blockquote>
 <p><em>每个控制块大约占用缓存页大小的5%，在MySQL5.7.21这个版本中，每个控制块占用的大小是808字节。而我们设置的innodb_buffer_pool_size并不包含这部分控制块占用的内存空间大小，也就是说InnoDB在为Buffer Pool向操作系统申请连续的内存空间时，这片连续的内存空间一般会比innodb_buffer_pool_size的值大5%左右。</em></p>
 </blockquote>
+<p></br></br></p>
 <h3 id="03：空闲页-free-链表管理"><a href="#03：空闲页-free-链表管理" class="headerlink" title="03：空闲页 - free 链表管理"></a>03：空闲页 - free 链表管理</h3><hr>
 <p>在MySQL服务器启动后，会根据申请到的连续空间进行划分，一部分属于控制块区，一部分属于缓存页区。当请求查询某一条记录而将磁盘中对应页的数据装载入缓存时，<strong>如何确定要将这个页存储在缓存页的哪个位置呢？</strong>或者换个角度理解，<strong>如何区分Buffer Pool中哪些缓存页是空闲、哪些是已使用呢？</strong></p>
 <p>此时，引入一个<code>free 链表</code>，所有空闲的缓存页对应的控制块都作为该链表的一个节点。那么在刚刚完成初始化的<code>Buffer Pool</code>中所有的缓存页都是空闲的，所以每一个缓存页对应的控制块都会被加入到<code>free链表</code>中，假设该<code>Buffer Pool</code>中可容纳的缓存页数量为<code>n</code>，那增加了<code>free链表</code>的效果图就是这样的：</p>
@@ -1849,10 +1851,15 @@
 <ul>
 <li><input disabled="" type="checkbox"> &#x3D;&#x3D;待补充，从磁盘读取页后，再次查询对应页怎么查找到&#x2F;映射？&#x3D;&#x3D;</li>
 </ul>
+<p></br></br></p>
 <h3 id="04：缓存命中-缓存页的哈希处理"><a href="#04：缓存命中-缓存页的哈希处理" class="headerlink" title="04：缓存命中 - 缓存页的哈希处理"></a>04：缓存命中 - 缓存页的哈希处理</h3><hr>
 <p>当我们需要访问某个页中的数据时，就会把该页从磁盘加载到<code>Buffer Pool</code>中，如果该页已经在<code>Buffer Pool</code>中的话直接使用就可以了。那么问题也就来了，我们怎么知道该页在不在<code>Buffer Pool</code>中呢？难不成需要依次遍历<code>Buffer Pool</code>中各个缓存页么？</p>
+</br>
+
 <p>回顾一次 <code>SELECT</code> 查询的过程，在找到对应记录所在的聚簇索引B+树的叶子结点页号，比如确定页号为 <code>page_no = 12345</code>，所在表空间为 <code>space_id = 67</code>。也就是说，我们其实是根据 <strong><code>表空间号 + 页号</code></strong> 来定位一个页的，也就相当于<code>表空间号 + 页号</code>是一个<code>key</code>，<code>缓存页</code>就是对应的<code>value</code>。</p>
 <p>所以我们可以用**<code>表空间号 + 页号</code><strong>作为<code>key</code>，</strong><code>缓存页(对应控制块的指针)</code>**作为<code>value</code>创建一个哈希表，在需要访问某个页的数据时，先从哈希表中根据<code>表空间号 + 页号</code>看看有没有对应的缓存页，如果有，直接使用该缓存页就好。如果没有，那就从<code>free链表</code>中选一个空闲的缓存页，然后把磁盘中对应的页加载到该缓存页的位置。</p>
+</br>
+
 <div style="color: red; font-weight: bold;">Q：为什么不是直接映射到内存页地址？</div>
 
 <ul>
@@ -1860,6 +1867,8 @@
 <li>InnoDB 的许多操作（淘汰页、刷盘、链表维护）都围绕控制块进行；</li>
 <li>内存页本身是比较「哑的」，控制逻辑都在控制块里；</li>
 </ul>
+</br>
+
 <div style="color: red; font-weight: bold;">Q：怎么理解三种链表的底层实现？</div>
 
 <p>这些链表（如 LRU、Free、Flush）中的「节点」是抽象出来的，而<strong>节点之间的联系就是靠控制块（Control Block）中的前驱、后继指针字段来维护的</strong>。</p>
@@ -1879,8 +1888,7 @@
 
 
 
-
-
+<p></br></br></p>
 <h3 id="05：脏页-flush-链表管理"><a href="#05：脏页-flush-链表管理" class="headerlink" title="05：脏页 - flush 链表管理"></a>05：脏页 - flush 链表管理</h3><hr>
 <p>若用户对Buffer Pool中的某个页中的记录进行修改，此时对于该页而言，存在缓冲池版本与磁盘中的版本的数据不一致情况，该页即为“脏页”。</p>
 <p>以用户修改为最新数据，那么必须要将更新的内容同步回磁盘（刷新），同步的策略目前可想到的如下：</p>
@@ -1896,15 +1904,18 @@
 <blockquote>
 <p>假如<code>Buffer Pool</code>被设置的很大，比方说<code>300G</code>，那一次性同步这么多数据势必会耗费大量的时间，在请求量高时对性能有很大的影响；</p>
 </blockquote>
+</br>
+
 <p><strong>对策</strong>：创建一个<strong>存储脏页的链表</strong>，凡是修改过的缓存页对应的控制块都会作为一个节点加入到一个链表中，因为这个链表节点对应的缓存页都是需要被刷新到磁盘上的，所以也叫<code>flush链表</code>。链表的构造和<code>free链表</code>差不多，假设某个时间点<code>Buffer Pool</code>中的脏页数量为<code>n</code>，那么对应的<code>flush链表</code>如下：</p>
 <img src="https://raw.githubusercontent.com/Tomorrowllbefine/Study/master/pics/image-20250515203625992.png" alt="image-20250515203625992" style="zoom:80%;" />
 
-
-
+<p></br></br></p>
 <h3 id="06：缓存空间维护-LRU链表的管理"><a href="#06：缓存空间维护-LRU链表的管理" class="headerlink" title="06：缓存空间维护 - LRU链表的管理"></a>06：缓存空间维护 - LRU链表的管理</h3><hr>
 <p><strong>缓存不够问题</strong>：</p>
 <p><code>Buffer Pool</code>对应的内存大小毕竟是有限的，如果需要缓存的页占用的内存大小超过了<code>Buffer Pool</code>大小，后续查询的页则无法进行缓存（基于<strong>局部性原理</strong>而言，缓存命中率在缓冲池满后会急剧下降）。因此需要<strong>把某些旧的缓存页从<code>Buffer Pool</code>中移除，然后再把新的页放进来</strong>，维护缓存空间。</p>
 <p>不难理解，在缓冲池将要满或者满的情况下，<strong>要保留的是最近频繁使用的缓存页，剔除最近很少使用的缓存页</strong>。</p>
+</br>
+
 <div style="color: blue; font-weight: bold;">版本一：简单的LRU链表：</div>
 
 <p>管理<code>Buffer Pool</code>的缓存页其实也是这个道理，当<code>Buffer Pool</code>中不再有空闲的缓存页时，就需要淘汰掉部分<strong>最近很少使用</strong>的缓存页。</p>
@@ -1918,9 +1929,11 @@
 <blockquote>
 <p>LRU(Least Recently Used，最少最近使用)原则，筛选出最近一段时间内，使用&#x2F;访问频率最少的item；</p>
 </blockquote>
+</br>
+
 <div style="color: blue; font-weight: bold;">版本二：划分区域的LRU链表：</div>
 
-<p>简单LRU链表使用过程中会面临两方面的问题：</p>
+<p>简单LRU链表使用过程中会面临<strong>两方面的问题</strong>：</p>
 <ol>
 <li><p><code>InnoDB</code>提供了一个看起来比较贴心的服务——<code>预读</code>（英文名：<code>read ahead</code>）。所谓<code>预读</code>，就是<code>InnoDB</code>认为<u>执行当前的请求可能之后会读取某些页面，就预先把它们加载到<code>Buffer Pool</code>中</u>。根据触发的方式，可细分为：</p>
 <ul>
@@ -1940,9 +1953,11 @@
 <li><p>对一些<strong>需要执行扫描全表的查询语句</strong>（比如没有建立合适的索引或者压根儿没有WHERE子句的查询），会导致<code>Buffer Pool</code>中的所有页都被换了一次血，使得其它查询语句在执行时又得执行一次从磁盘加载到<code>Buffer Pool</code>的操作，严重地<strong>影响到其他查询对 <code>Buffer Pool</code>的使用，从而大大降低了缓存命中率</strong>。</p>
 </li>
 </ol>
-<p>总结上述两种情况：</p>
+</br>
+
+<p><strong>总结上述两种情况</strong>：</p>
 <ul>
-<li>加载到<code>Buffer Pool</code>中的页不一定会被用到；</li>
+<li>加载到<code>Buffer Pool</code>中的页在将来不一定会被用到；</li>
 <li>如果非常多的<code>低频使用率的页</code>被同时加载到<code>Buffer Pool</code>时，可能会把那些使用频率非常高的页从<code>Buffer Pool</code>中淘汰掉；</li>
 </ul>
 <p>因此，设计者提出一种方案，将LRU链表按照一定的比例分成两个区域（ young 区和 old 区）：</p>
@@ -1952,9 +1967,200 @@
 </ul>
 <p>随着程序的运行，某个节点所属的区域也可能发生变化，默认情况下，<code>old</code>区域在<code>LRU链表</code>中所占的比例是<code>37%</code>，也就是说<code>old</code>区域大约占<code>LRU链表</code>的<code>3/8</code>。</p>
 <img src="https://raw.githubusercontent.com/Tomorrowllbefine/Study/master/pics/image-20250515215215864.png" alt="image-20250515215215864" style="zoom:80%;" />
+
+</br>
+
+<div style="color: red; font-weight: bold;">“划分区域”方案对于上述问题的解决：</div>
+
+<ul>
+<li><strong>针对InnoDB预读后的页在将来不被访问的情况</strong>：</li>
+</ul>
+<p>划分了冷热数据区后，对于<code>预读</code>加载入<code>Buffer Pool</code>的页（姑且称为预读冗余页），会被加载入<code>old区</code>的头部，若没有被访问则会在<code>old区</code>进行轮转直至淘汰，不会影响<code>young区</code>的高频使用缓存页；</p>
+<ul>
+<li><strong>针对全表扫描时非常多<code>低频使用率的页</code>被同时加载到<code>Buffer Pool</code>后并被访问淘汰了<code>高频使用率的页</code>的情况</strong>：</li>
+</ul>
+<p>实际上以目前对于LRU的优化，还不能解决这个情况下的问题。在进行全表扫描时，虽然首次被加载到<code>Buffer Pool</code>的页被放到了<code>old</code>区域的头部，但是后续会被马上访问到，每次进行访问的时候又会把该页放到<code>young</code>区域的头部，这样仍然会把那些使用频率比较高的页面给顶下去。</p>
+<blockquote>
+<p>可能会想：可不可以在第一次访问该页面时不将其从<code>old</code>区域移动到<code>young</code>区域的头部，后续访问时再将其移动到<code>young</code>区域的头部。</p>
+<p>回答是：行不通！因为设计<code>InnoDB</code>的大叔规定每次去页面中读取一条记录时，都算是访问一次页面，而一个页面中可能会包含很多条记录，也就是说<strong>读取完某个页面的记录就相当于访问了这个页面好多次了</strong>。</p>
+</blockquote>
+<p>此时考虑到<code>全表扫描</code>的特点：**<code>执行频率非常低</code><strong>（不常会这样写SQL）且</strong><code>对于同一个页面的访问花费的时间很短</code>**。</p>
+</br>
+
+<p><strong>优化思路</strong>：规定一个对<code>old区</code>缓存页的两次访问时间间隔来过滤全表扫描时小时间间隔导致该缓存页误入<code>young区</code>的问题。</p>
+<p><strong>具体为</strong>：在对某个处在<code>old</code>区域的缓存页进行第一次访问时就在它对应的控制块中记录下来这个访问时间，如果<strong>后续的访问时间</strong>与<strong>第一次访问</strong>的时间在某个时间间隔内，那么该页面就不会被从<code>old区</code>移动到<code>young区</code>的头部，否则将它移动到<code>young区</code>域的头部</p>
+<p>上述的这个间隔时间是由系统变量<code>innodb_old_blocks_time</code>控制的，可以看到：</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">SHOW</span> VARIABLES <span class="keyword">LIKE</span> <span class="string">&#x27;innodb_old_blocks_time&#x27;</span>;</span><br><span class="line"><span class="operator">+</span><span class="comment">------------------------+-------+</span></span><br><span class="line"><span class="operator">|</span> Variable_name          <span class="operator">|</span> <span class="keyword">Value</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">------------------------+-------+</span></span><br><span class="line"><span class="operator">|</span> innodb_old_blocks_time <span class="operator">|</span> <span class="number">1000</span>  <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">------------------------+-------+</span></span><br><span class="line"><span class="number">1</span> <span class="type">row</span> <span class="keyword">in</span> <span class="keyword">set</span> (<span class="number">0.01</span> sec)</span><br></pre></td></tr></table></figure>
+
+<p>这个<code>innodb_old_blocks_time</code>的默认值是<code>1000</code>，它的单位是毫秒<code>ms</code>，也就意味着对于从磁盘上被加载到<code>LRU</code>链表的<code>old</code>区域的某个页来说，如果第一次和最后一次访问该页面的时间间隔小于<code>1s</code>（很明显在一次全表扫描的过程中，多次访问一个页面中的时间不会超过<code>1s</code>），那么该页是不会被加入到<code>young</code>区域的。</p>
+<blockquote>
+<p>如果我们把<code>innodb_old_blocks_time</code>的值设置为<code>0</code>，那么每次我们访问一个页面时就会把该页面放到<code>young</code>区域的头部；</p>
+</blockquote>
+</br>
+
+<p><strong>综上所述</strong>，正是因为将<code>LRU</code>链表划分为<code>young</code>和<code>old</code>区域这两个部分，又添加了<code>innodb_old_blocks_time</code>这个系统变量，才使得预读机制和全表扫描造成的缓存命中率降低的问题得到了遏制，因为用不到的预读页面以及全表扫描的页面都只会被放到<code>old</code>区域，而不影响<code>young</code>区域中的缓存页。</p>
+<div style="color: blue; font-weight: bold;">版本三：针对young区频繁变动的优化：</div>
+
+<p><strong>问题描述</strong>：因为**<code>执行频率非常高</code>**的<code>young区</code>中的缓存页会被频繁访问，每一次访问就意味着一次<code>LRU链表节点</code>的移动（实质是对控制块中的某些维护的字段的修改调整），这实际上也是一笔不小的开销，毕竟<code>young区</code>中存储的都是热点数据。</p>
+<p><strong>优化策略</strong>：只有被访问的缓存页位于<code>young</code>区域的<code>1/4</code>的后边，才会被移动到<code>LRU链表</code>头部，这样就可以降低调整<code>LRU链表</code>的频率，从而提升性能（也就是说如果某个缓存页对应的节点在<code>young</code>区域的<code>1/4</code>中，再次访问该缓存页时也不会将其移动到<code>LRU</code>链表头部）。</p>
+<blockquote>
+<p><em>我们之前介绍随机预读的时候曾说，如果Buffer Pool中有某个区的13个连续页面就会触发随机预读，这其实是不严谨的（不幸的是MySQL文档就是这么说的[摊手]），其实还要求这13个页面是非常热的页面，所谓的非常热，指的是这些页面在整个young区域的头1&#x2F;4处。</em></p>
+</blockquote>
+</br>
+
+
+
+<h3 id="07：其它的链表"><a href="#07：其它的链表" class="headerlink" title="07：其它的链表"></a>07：其它的链表</h3><hr>
+<p>为了更好的管理<code>Buffer Pool</code>中的缓存页，除了我们上边提到的一些措施，设计<code>InnoDB</code>的大叔们还引进了其他的一些<code>链表</code>，比如<code>unzip LRU链表</code>用于管理解压页，<code>zip clean链表</code>用于管理没有被解压的压缩页，<code>zip free数组</code>中每一个元素都代表一个链表，它们组成所谓的<code>伙伴系统</code>来为压缩页提供内存空间等等，总之是为了更好的管理这个<code>Buffer Pool</code>引入了各种链表或其他数据结构。</p>
+</br>
+
+
+
+<h3 id="08：刷新脏页到磁盘"><a href="#08：刷新脏页到磁盘" class="headerlink" title="08：刷新脏页到磁盘"></a>08：刷新脏页到磁盘</h3><hr>
+<p>后台有专门的线程每隔一段时间负责把脏页刷新到磁盘（异步），这样可以不影响用户线程处理正常的请求。</p>
+<p>主要有两种刷新路径：</p>
+<ul>
+<li><strong>从<code>LRU链表</code>的冷数据中刷新一部分页面到磁盘</strong>；</li>
+</ul>
+<p>后台线程会定时从<code>LRU链表</code>尾部开始扫描一些页面，扫描的页面数量可以通过系统变量<code>innodb_lru_scan_depth</code>来指定，如果从里边儿发现脏页，会把它们刷新到磁盘。这种刷新页面的方式被称之为<code>BUF_FLUSH_LRU</code>。</p>
+<ul>
+<li><strong>从<code>flush链表</code>中选择一部分页面进行刷新到磁盘</strong>；</li>
+</ul>
+<p>后台线程也会定时从<code>flush链表</code>中刷新一部分页面到磁盘，刷新的速率取决于当时系统是不是很繁忙。这种刷新页面的方式被称之为<code>BUF_FLUSH_LIST</code>。</p>
+</br>
+
+<p><strong>特殊情况</strong>：在后台线程刷新脏页的进度比较慢时，可能<strong>导致用户线程在准备加载一个磁盘页到<code>Buffer Pool</code>时没有可用的缓存页</strong>，这时就会尝试看看：</p>
+<ul>
+<li><code>LRU链表</code>尾部有没有可以直接释放掉的未修改页面；</li>
+<li>如果没有的话，会不得不将<code>LRU链表</code>尾部的一个脏页同步刷新到磁盘，再将其释放以腾出一个缓存页位置；</li>
+</ul>
+<p>这种刷新单个页面到磁盘中的刷新方式被称之为<code>BUF_FLUSH_SINGLE_PAGE</code>。</p>
+<blockquote>
+<p><em>当然，有时候系统特别繁忙时，也可能出现用户线程批量的从<code>flush链表</code>中刷新脏页的情况，很显然在处理用户请求过程中去刷新脏页是一种严重降低处理速度的行为（毕竟磁盘的速度慢的要死），这属于一种迫不得已的情况，不过这得放在后边唠叨<code>redo</code>日志的<code>checkpoint</code>时说了。</em></p>
+</blockquote>
+</br>
+
+
+
+<h3 id="09：并发环境-多个Buffer-Pool实例"><a href="#09：并发环境-多个Buffer-Pool实例" class="headerlink" title="09：并发环境 - 多个Buffer Pool实例"></a>09：并发环境 - 多个Buffer Pool实例</h3><hr>
+<p>Buffer Pool的本质是一块连续的物理内存空间，在单一线程的情况下进行访问尚且还正常。在多线程情况下，面对高并发的请求处理时，访问和修改其中的各种维护链表都需要进行加锁处理，以免出现并发安全问题。因此单一的Buffer Pool在多线程环境下会造成性能问题，影响执行速度。</p>
+<p>所以在<code>Buffer Pool</code>特别大的时候，我们可以把它们拆分成若干个小的<code>Buffer Pool</code>，每个<code>Buffer Pool</code>都称为一个<code>实例</code>，它们都是独立的，独立的去申请内存空间，独立的管理各种链表等。以此在多线程环境下互不影响地进行访问，提高MySQL的并发能力。</p>
+<p>可以在服务器启动的时候通过设置<code>innodb_buffer_pool_instances</code>的值来修改<code>Buffer Pool</code>实例的个数，比方说这样：</p>
+<figure class="highlight ini"><table><tr><td class="code"><pre><span class="line"><span class="section">[server]</span></span><br><span class="line"><span class="attr">innodb_buffer_pool_instances</span> = <span class="number">2</span></span><br></pre></td></tr></table></figure>
+
+<p>表明我们要创建2个<code>Buffer Pool</code>实例，类似于下图：</p>
+<img src="https://raw.githubusercontent.com/Tomorrowllbefine/Study/master/pics/image-20250517202550757.png" style="zoom:60%;" />
+
+<p>每个<code>Buffer Pool</code>实例实际占多少内存空间为：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">innodb_buffer_pool_size/innodb_buffer_pool_instances</span><br></pre></td></tr></table></figure>
+
+<p>也就是总共的大小除以实例的个数，结果就是每个<code>Buffer Pool</code>实例占用的大小。</p>
+<blockquote>
+<p><em>不过也不是说<code>Buffer Pool</code>实例创建的越多越好，分别管理各个<code>Buffer Pool</code>也是需要性能开销的，设计<code>InnoDB</code>的大叔们规定：当innodb_buffer_pool_size的值小于1G的时候设置多个实例是无效的，InnoDB会默认把innodb_buffer_pool_instances 的值修改为1。而我们鼓励在<code>Buffer Pool</code>大于或等于1G的时候设置多个<code>Buffer Pool</code>实例。</em></p>
+</blockquote>
+<p></br></br></p>
+<h3 id="10：并发环境-以chunk为单位分配内存空间"><a href="#10：并发环境-以chunk为单位分配内存空间" class="headerlink" title="10：并发环境 - 以chunk为单位分配内存空间"></a>10：并发环境 - 以chunk为单位分配内存空间</h3><hr>
+<p>在<code>5.7.5</code>以及之后的版本中支持了<strong>在服务器运行过程中调整<code>Buffer Pool</code>大小</strong>的功能。但是有一个问题，就是每次当我们要重新调整<code>Buffer Pool</code>大小时，都需要重新向操作系统申请一块连续的内存空间，然后将旧的<code>Buffer Pool</code>中的内容复制到这一块新空间，这是极其耗时的。</p>
+<div style="color: blue; font-weight: bold;">InnoDB 启动时的 Buffer Pool 分配机制：</div>
+
+<p><strong>第一步：初始化分配</strong></p>
+<p>为整个 <code>innodb_buffer_pool_size</code> 分配控制结构，但不是立即分配所有内存页</p>
+<blockquote>
+<p>例如：你设置了 <code>innodb_buffer_pool_size = 32G</code>。InnoDB 会根据 <code>innodb_buffer_pool_chunk_size</code> 和 <code>innodb_buffer_pool_instances</code> 参数<strong>计算出 chunk 数量</strong> 和<strong>instance 数量</strong>。启动时会先<strong>分配好所有控制块结构（page control block，也叫 buffer frame）</strong>。但是实际用于缓存页数据的物理内存（也就是 page data area），<strong>不是一下子全部 malloc 分配完的</strong>。</p>
+</blockquote>
+</br>
+
+<p><strong>第二步：按需逐步分配页内存（chunk 级别）</strong></p>
+<p>只有当实例运行需要用到更多页时，InnoDB 才会<strong>以 chunk 为单位逐步分配物理内存</strong>。每个 chunk 通常大小为 <code>128MB</code>（由 <code>innodb_buffer_pool_chunk_size</code> 决定）。</p>
+<p>这样做的目的是：</p>
+<ul>
+<li>减少一次性申请巨大连续内存失败的风险（尤其是 Linux 上，无法分配 32G 连续空间）；</li>
+<li>减少系统内存碎片；</li>
+<li>提高灵活性和稳定性；</li>
+</ul>
+</br>
+
+<div style="color: red; font-weight: bold;">Q：每一个chunk中的缓存页是一样的吗 还是各自维护各自的缓存页？</div>
+
+<p>每个chunk是独立管理缓存页的单位（<strong>物理分配</strong>），每个<code>Buffer Pool Instance</code>是逻辑上的隔离单位（<strong>管理和调度</strong>）。</p>
+<p><strong>结构关系</strong>：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">InnoDB Buffer Pool</span><br><span class="line">├── Instance 1</span><br><span class="line">│   ├── Chunk A（128MB）</span><br><span class="line">│   ├── Chunk B（128MB）</span><br><span class="line">│   └── ...</span><br><span class="line">│</span><br><span class="line">├── Instance 2</span><br><span class="line">│   ├── Chunk C（128MB）</span><br><span class="line">│   ├── Chunk D（128MB）</span><br><span class="line">│   └── ...</span><br><span class="line">└── ...</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>对比来看</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>作用</th>
+<th>是否负责缓存页管理</th>
+<th>是否维护自己的链表、LRU等</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>chunk</code></td>
+<td>内存物理分配单位（128MB 一块）</td>
+<td>❌ 不负责管理缓存页逻辑</td>
+<td>❌ 不维护链表等逻辑</td>
+</tr>
+<tr>
+<td><code>buffer pool instance</code></td>
+<td>缓存页管理单位</td>
+<td>✅ 负责管理缓存页的加载、替换、LRU、Flush 等</td>
+<td>✅ 有自己的控制块链表、LRU、Free、Flush</td>
+</tr>
+</tbody></table>
+</br>
+
+<div style="color: red; font-weight: bold;">Q：多个实例情况下，缓存页如何分配呢？</div>
+
+<p>缓存页会 **归属于某个 <code>Buffer Pool Instance</code>**，InnoDB 会基于页的 <code>space_id</code> 和 <code>page_no</code> 做哈希映射决定页归属于哪个<code>instance</code>，而不是哪个<code>chunk</code>。</p>
+<p><strong>例如</strong>：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">页号 (space_id=5, page_no=1200) → 哈希 → 映射到 buffer pool instance 1 → 从 instance 1 的 chunk pool 中找到空闲页帧加载</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<p></br></br></p>
+<h3 id="11：查看Buffer-Pool的状态"><a href="#11：查看Buffer-Pool的状态" class="headerlink" title="11：查看Buffer Pool的状态"></a>11：查看Buffer Pool的状态</h3><hr>
+<p>MySQL提供了<code>SHOW ENGINE INNODB STATUS</code>语句来查看关于<code>InnoDB</code>存储引擎运行过程中的一些状态信息，其中就包括<code>Buffer Pool</code>的一些信息：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">mysql&gt; SHOW ENGINE INNODB STATUS\G</span><br><span class="line"></span><br><span class="line">(...省略前边的许多状态)</span><br><span class="line">----------------------</span><br><span class="line">BUFFER POOL AND MEMORY</span><br><span class="line">----------------------</span><br><span class="line">Total memory allocated 13218349056;</span><br><span class="line">Dictionary memory allocated 4014231</span><br><span class="line">Buffer pool size   786432</span><br><span class="line">Free buffers       8174</span><br><span class="line">Database pages     710576</span><br><span class="line">Old database pages 262143</span><br><span class="line">Modified db pages  124941</span><br><span class="line">Pending reads 0</span><br><span class="line">Pending writes: LRU 0, flush list 0, single page 0</span><br><span class="line">Pages made young 6195930012, not young 78247510485</span><br><span class="line">108.18 youngs/s, 226.15 non-youngs/s</span><br><span class="line">Pages <span class="built_in">read</span> 2748866728, created 29217873, written 4845680877</span><br><span class="line">160.77 reads/s, 3.80 creates/s, 190.16 writes/s</span><br><span class="line">Buffer pool hit rate 956 / 1000, young-making rate 30 / 1000 not 605 / 1000</span><br><span class="line">Pages <span class="built_in">read</span> ahead 0.00/s, evicted without access 0.00/s, Random <span class="built_in">read</span> ahead 0.00/s</span><br><span class="line">LRU len: 710576, unzip_LRU len: 118</span><br><span class="line">I/O <span class="built_in">sum</span>[134264]:cur[144], unzip <span class="built_in">sum</span>[16]:cur[0]</span><br><span class="line">--------------</span><br><span class="line">(...省略后边的许多状态)</span><br><span class="line"></span><br><span class="line">mysql&gt;</span><br></pre></td></tr></table></figure>
+
+<p>其中一些字段：</p>
+<ul>
+<li><p><code>Total memory allocated</code>：代表<code>Buffer Pool</code>向操作系统申请的连续内存空间大小，包括全部控制块、缓存页、以及碎片的大小；</p>
+</li>
+<li><p><code>Dictionary memory allocated</code>：为数据字典信息分配的内存空间大小，注意这个内存空间和<code>Buffer Pool</code>没啥关系，不包括在<code>Total memory allocated</code>中；</p>
+</li>
+<li><p><code>Buffer pool size</code>：代表该<code>Buffer Pool</code>可以容纳多少缓存<code>页</code>，注意，单位是<code>页</code>；</p>
+</li>
+<li><p><code>Free buffers</code>：代表当前<code>Buffer Pool</code>还有多少空闲缓存页，也就是<code>free链表</code>中还有多少个节点；</p>
+</li>
+<li><p><code>Database pages</code>：代表<code>LRU</code>链表中的页的数量，包含<code>young</code>和<code>old</code>两个区域的节点数量；</p>
+</li>
+<li><p><code>Old database pages</code>：代表<code>LRU</code>链表<code>old</code>区域的节点数量；</p>
+</li>
+<li><p><code>Modified db pages</code>：代表脏页数量，也就是<code>flush链表</code>中节点的数量；</p>
+</li>
+<li><p><code>Pending reads</code>：正在等待从磁盘上加载到<code>Buffer Pool</code>中的页面数量；</p>
+</li>
+</ul>
+<p>当准备从磁盘中加载某个页面时，会先为这个页面在<code>Buffer Pool</code>中分配一个缓存页以及它对应的控制块，然后把这个控制块添加到<code>LRU</code>的<code>old</code>区域的头部，但是这个时候真正的磁盘页并没有被加载进来，<code>Pending reads</code>的值会跟着加1；</p>
+<ul>
+<li><code>Pending writes LRU</code>：即将从<code>LRU</code>链表中刷新到磁盘中的页面数量；</li>
+<li><code>Pending writes flush list</code>：即将从<code>flush</code>链表中刷新到磁盘中的页面数量；</li>
+<li><code>Pending writes single page</code>：即将以单个页面的形式刷新到磁盘中的页面数量；</li>
+<li><code>Pages made young</code>：代表<code>LRU</code>链表中曾经从<code>old</code>区域移动到<code>young</code>区域头部的节点数量；</li>
+</ul>
+<p>这里需要注意，一个节点每次只有从<code>old</code>区域移动到<code>young</code>区域头部时才会将<code>Pages made young</code>的值加1，也就是说如果该节点本来就在<code>young</code>区域，由于它符合在<code>young</code>区域1&#x2F;4后边的要求，下一次访问这个页面时也会将它移动到<code>young</code>区域头部，但这个过程并不会导致<code>Pages made young</code>的值加1。</p>
+<ul>
+<li>……</li>
+</ul>
 ]]></content>
       <tags>
-        <tag>backend</tag>
+        <tag>read-note</tag>
       </tags>
   </entry>
 </search>
